@@ -80,6 +80,7 @@ def test_custom_hotkey_saved_normalized(api, home):
     for bad in ({"hotkey": {"key": "a"}}, {"hotkey": {"key": "ctrl+shift"}}, {"hotkey": {"min_hold_ms": 5}}):
         with pytest.raises(ValueError):
             api.save_settings(bad)
+    api.save_settings({"app": {"language": "zh"}})  # 不依赖运行环境的系统语言（CI 是英文）
     with pytest.raises(ValueError, match="影响正常打字"):
         api.save_settings({"hotkey": {"key": "space"}})
 
