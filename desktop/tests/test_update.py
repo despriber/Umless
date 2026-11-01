@@ -285,6 +285,18 @@ def test_installer_tampered_after_download(home, db):
     assert not path.exists()
 
 
+def test_installer_truncated_after_download_says_checksum_failed(home, db):
+    """大小也变了（被截断或替换）：提示校验失败并删除，而不是笼统的「请先下载更新」。"""
+    updater.check(config.load(), db)
+    path = updater.download(db)
+    path.write_bytes(b"MZ short")
+    with pytest.raises(updater.UpdateError, match="sha256|校验"):
+        updater.verified_installer(db)
+    assert not path.exists()
+    with pytest.raises(updater.UpdateError, match="下载"):  # 记录已清除：再装就是「请先下载更新」
+        updater.verified_installer(db)
+
+
 def test_download_without_update(home, db, server):
     Fake.routes["/update.json"] = (200, json.dumps(manifest(server, version="0.0.1")).encode())
     updater.check(config.load(), db)

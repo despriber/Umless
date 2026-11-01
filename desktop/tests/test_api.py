@@ -7,6 +7,7 @@ import numpy as np
 import pytest
 import soundfile as sf
 
+import umless
 from umless import app as app_mod
 from umless import config, i18n, output, sounds, system
 from umless.db import DB
@@ -107,7 +108,7 @@ def test_language_switch_changes_app_info_and_errors(api):
     assert set(info) == {"version", "onboarded", "tour_done", "theme", "language", "language_setting",
                          "hotkey", "data_dir", "core_running", "platform"}
     assert info["platform"] == "windows"
-    assert info["version"] == "0.3.0" and info["language_setting"] == "auto"
+    assert info["version"] == umless.__version__ and info["language_setting"] == "auto"
     assert info["language"] in ("zh", "en")
     api.save_settings({"app": {"language": "en", "tour_done": True}})
     info = api.get_app_info()

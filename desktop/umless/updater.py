@@ -344,6 +344,13 @@ def verified_installer(db: DB) -> Path:
     version, asset = latest_asset(db)
     path = downloaded_installer(db, asset, version)
     if path is None:
+        # 有下载记录、文件也在，只是大小对不上：下载后被改动或截断，按校验失败处理并提示重新下载
+        rec = db.get_kv(DOWNLOAD_KEY)
+        stale = Path(rec.get("path") or "") if isinstance(rec, dict) and rec.get("version") == version else None
+        if asset and stale is not None and stale.is_file():
+            stale.unlink(missing_ok=True)
+            db.set_kv(DOWNLOAD_KEY, None)
+            raise UpdateError(t("update.checksum_failed"))
         raise UpdateError(t("update.not_downloaded"))
     if sha256_of(path) != asset["sha256"]:
         path.unlink(missing_ok=True)
