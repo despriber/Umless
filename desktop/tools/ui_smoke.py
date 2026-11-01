@@ -207,6 +207,7 @@ def main():
             page.wait_for_selector(".tour", state="detached")
             results.append({"tour": "replay and keyboard skip", "ok": True})
             update_checks(page, api, OUTPUT, results, android=False)
+            network_checks(page, api, OUTPUT, results, android=False)
             android_pass(browser, server.server_port, results, errors, warnings)
             assert not errors, errors
             assert not warnings, warnings
@@ -373,6 +374,7 @@ def android_pass(browser, port, results, errors, warnings):
     page.wait_for_selector(".tour", state="detached")
     results.append({"android_tour": "all seven steps fit a 390px screen", "ok": True})
     update_checks(page, api, out, results, android=True, check=check_page)
+    network_checks(page, api, out, results, android=True, check=check_page)
     assert not page.evaluate("window.__umless.errors"), page.evaluate("window.__umless.errors")
     context.close()
 
@@ -540,6 +542,14 @@ def update_checks(page, api, out, results, *, android, check=None):
         assert "GitHub" in page.locator("#upd-status").inner_text()
         verify(f"{tag}/error")
         shot(f"{tag}-update-error")
+        # Repository without a published release yet: the manifest is 404 on every source — not an error.
+        api.mock_update("not_published")
+        check_now("is-empty")
+        assert ("还没有发布版本" if language == "zh" else "nothing has been released") in page.locator("#upd-status").inner_text()
+        assert page.locator("[data-update-check]").get_attribute("aria-label") == ("检查更新" if language == "zh" else "Check for updates")
+        assert not page.locator(".upd-panel").count() and not banner.count()
+        verify(f"{tag}/not-published")
+        shot(f"{tag}-update-not-published")
         if not android:
             api.mock_update("source")
             check_now("is-new")
@@ -547,7 +557,7 @@ def update_checks(page, api, out, results, *, android, check=None):
             assert not page.locator("[data-update-download]").count()
             verify(f"{tag}/source")
             shot(f"{tag}-update-source")
-        results.append({"update": f"{prefix}{tag} up to date, error" + ("" if android else ", running from source"), "ok": True})
+        results.append({"update": f"{prefix}{tag} up to date, error, not published" + ("" if android else ", running from source"), "ok": True})
 
         # Automatic check toggle.
         page.locator('[data-key="update.auto_check"]').uncheck(force=True)
@@ -556,6 +566,98 @@ def update_checks(page, api, out, results, *, android, check=None):
         page.wait_for_function("async () => (await window.pywebview.api.get_settings()).config.update.auto_check === true")
         results.append({"update": f"{prefix}{tag} auto-check toggle persists", "ok": True})
     api.mock_update("available")
+
+
+def network_checks(page, api, out, results, *, android, check=None):
+    """Download source (Settings → General, docs/ui-api.md「下载源」): mode switch, mirror address validation /
+    normalization / reset, test connection results (one failing + suggestion, both ok + preferred). zh light, en dark."""
+    act = (lambda loc: loc.tap()) if android else (lambda loc: loc.click())
+    prefix = "android/" if android else ""
+    saved = "async v => JSON.stringify((await window.pywebview.api.get_settings()).config.network) === v"
+
+    def wait_saved(source, url):
+        page.wait_for_function(saved, arg=json.dumps({"download_source": source, "mirror_url": url}, separators=(",", ":")))
+
+    def verify(tag):
+        if check:
+            check(f"android/network/{tag}")
+        else:
+            assert not page.evaluate("window.__umless.errors"), page.evaluate("window.__umless.errors")
+            assert not page.evaluate("document.querySelector('#view').scrollWidth > document.querySelector('#main').clientWidth"), tag
+
+    def shot(name):
+        page.locator("#net-result").evaluate("e => e.closest('.set-group').scrollIntoView({block: 'start'})")
+        page.wait_for_timeout(350)
+        page.screenshot(path=str(out / f"{name}.png"))
+
+    def mirror(value):
+        box = page.locator("[data-mirror-url]")
+        box.fill(value)
+        box.press("Enter")
+
+    default = "https://gh-proxy.com/"
+    for language, theme in (("zh", "light"), ("en", "dark")):
+        api.mock_network(None, "mirror")
+        api.save_settings({"network": {"download_source": "auto", "mirror_url": default}})
+        page.evaluate("language => window.__umless.setLanguage(language)", language)
+        page.evaluate("async theme => { await window.pywebview.api.save_settings({app:{theme}}); window.__umless.setTheme(theme); }", theme)
+        tag = f"{language}-{theme}"
+        page.evaluate("window.__umless.go('overview')")  # remount Settings so it reads the reset config
+        page.wait_for_timeout(200)
+        page.evaluate("window.__umless.go('settings/general')")
+        page.wait_for_selector("[data-seg='network.download_source']")
+        assert ("下载源" if language == "zh" else "Download source") in page.locator("#set-main").inner_text()
+        assert page.locator("[data-mirror-reset]").is_hidden()
+        verify(f"{tag}/default")
+
+        # Mode: GitHub direct → saved, description follows the mode.
+        act(page.locator("[data-seg='network.download_source'] [data-v='github']"))
+        wait_saved("github", default)
+        assert ("只直连" if language == "zh" else "directly") in page.locator(".net-mode").inner_text()
+
+        # Mirror address: invalid → inline error, nothing saved; valid → normalized with a trailing "/"; reset.
+        mirror("gh-proxy.com")
+        page.wait_for_selector("#mirror-error:not([hidden])")
+        assert page.locator("[data-mirror-url]").get_attribute("aria-invalid") is not None
+        assert api.get_settings()["config"]["network"]["mirror_url"] == default
+        verify(f"{tag}/mirror-invalid")
+        shot(f"{tag}-network-mirror-invalid")
+        mirror(" https://ghfast.top ")
+        wait_saved("github", "https://ghfast.top/")
+        assert page.locator("[data-mirror-url]").input_value() == "https://ghfast.top/"
+        assert page.locator("#mirror-error").is_hidden()
+        page.wait_for_selector("[data-mirror-reset]:not([hidden])")
+        act(page.locator("[data-mirror-reset]"))
+        wait_saved("github", default)
+        assert page.locator("[data-mirror-reset]").is_hidden()
+        results.append({"network": f"{prefix}{tag} mode switch, mirror validation / normalization / reset", "ok": True})
+
+        # Test connection: GitHub direct fails while it is the chosen mode → suggestion to switch.
+        api.mock_network("github", "mirror")
+        act(page.locator("[data-net-test]"))
+        page.wait_for_selector(".net-res[data-net-res='github'].is-error", timeout=5000)
+        assert "timed out" in page.locator(".net-res[data-net-res='github']").inner_text()
+        assert "ms" in page.locator(".net-res[data-net-res='mirror']").inner_text()
+        assert page.locator(".net-res[data-net-res='mirror'] .tag").count() == 1
+        assert page.locator("#net-result .upd-note.is-warn").count() == 1
+        assert not page.locator("[data-net-test]").is_disabled()
+        verify(f"{tag}/test-github-failed")
+        shot(f"{tag}-network-test-failed")
+
+        # Auto + both reachable: the faster one (mirror) is what auto prefers; no suggestion.
+        act(page.locator("[data-seg='network.download_source'] [data-v='auto']"))
+        wait_saved("auto", default)
+        api.mock_network(None, "github")
+        act(page.locator("[data-net-test]"))
+        page.wait_for_selector(".net-res[data-net-res='github'].is-ok", timeout=5000)
+        assert page.locator(".net-res.is-ok").count() == 2
+        assert page.locator(".net-res[data-net-res='mirror'] .tag").count() == 1
+        assert not page.locator("#net-result .upd-note").count()
+        verify(f"{tag}/test-ok")
+        shot(f"{tag}-network-test-ok")
+        results.append({"network": f"{prefix}{tag} test connection results, preferred source and suggestion", "ok": True})
+    api.mock_network(None, "mirror")
+    api.save_settings({"network": {"download_source": "auto", "mirror_url": default}})
 
 
 if __name__ == "__main__":

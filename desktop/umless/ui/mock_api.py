@@ -306,6 +306,10 @@ _UPDATE_TEXT = {
            "source_hint": "Running from source: update with git pull and uv sync", "no_update": "No update to download",
            "not_downloaded": "Download the update first", "cannot_install": "Can't install automatically when running from source"},
 }
+# 测试下载源（test_download_sources）：模拟的延迟与失败原因
+_PROBE_MS = {"github": 412, "mirror": 168}
+_PROBE_ERRORS = {"github": "timed out", "mirror": "HTTP 502"}  # 原始原因，不翻译（与真实实现一致）
+_NETWORK_FAIL = (None, "github", "mirror", "both")
 
 
 def _iso(dt: datetime) -> str:
@@ -377,6 +381,8 @@ class MockApi:
         self._update = {"state": "available", "fail_download": False, "downloaded": False, "job": None,
                         "perm_granted": False, "checked_at": self._now - timedelta(hours=2)}
         self.mock_update(update)
+        # 下载源：network_fail 为测试连接时失败的源（None / github / mirror / both），source_last 为 auto 先试的源
+        self._network = {"fail": None, "source_last": "mirror"}
         if not empty:
             self._seed_data()
 
@@ -411,6 +417,7 @@ class MockApi:
                         "retention_days": 0},
             "glossary": {"terms": ["Claude Code", "Codex", "GitHub", "PyTorch", "SenseVoice", "useMemo"]},
             "update": {"auto_check": True, "skipped_version": "", "manifest_url": ""},
+            "network": {"download_source": "auto", "mirror_url": "https://gh-proxy.com/"},
         }
 
     def _androidize(self) -> None:
@@ -962,6 +969,18 @@ class MockApi:
         for event in (patch.get("audio", {}).get("sounds") or {}):
             if event not in _SOUND_EVENTS:
                 raise ValueError(self._t("cfg.bad_sound_event", event=event))
+        net = patch.get("network", {})
+        if not isinstance(net, dict):
+            raise ValueError(self._t("cfg.bad_format"))
+        if "download_source" in net and net["download_source"] not in ("auto", "github", "mirror"):
+            raise ValueError(self._t("cfg.bad_download_source", value=net["download_source"]))
+        if "mirror_url" in net:
+            from ..config import normalize_mirror_url
+
+            try:
+                net["mirror_url"] = normalize_mirror_url(net["mirror_url"])
+            except ValueError:
+                raise ValueError(self._t("cfg.bad_mirror_url")) from None
         with self._lock:
             _deep_merge(self._config, patch)
         return self.get_settings()
@@ -1013,6 +1032,23 @@ class MockApi:
             return {"name": name}
 
         return self._new_job(work, name)
+
+    def test_download_sources(self):
+        """同时探测 GitHub 直连与镜像（模拟约 0.7 秒）；失败的源由 mock_network(fail=...) 决定。
+        preferred：都通时取更快的，只有一个通时取它，都不通时为原来记录的源；有源通时记下来（与真实实现一致）。"""
+        time.sleep(0.7)
+        fail = self._network["fail"]
+        result = {}
+        for source in ("github", "mirror"):
+            if fail in (source, "both"):
+                result[source] = {"ok": False, "ms": None, "error": _PROBE_ERRORS[source]}
+            else:
+                result[source] = {"ok": True, "ms": _PROBE_MS[source], "error": None}
+        ok = [s for s in ("github", "mirror") if result[s]["ok"]]
+        if ok:
+            self._network["source_last"] = min(ok, key=lambda s: result[s]["ms"])
+        result["preferred"] = self._network["source_last"]
+        return result
 
     def set_autostart(self, enabled):
         self._desktop_only("set_autostart")
@@ -1094,11 +1130,15 @@ class MockApi:
         result = {"current": current, "latest": None, "available": False, "skipped": False, "notes": "",
                   "published_at": None, "size": None,
                   "checked_at": _iso(u["checked_at"]) if u["checked_at"] else None, "error": None,
+                  "not_published": False,
                   "can_install": u["state"] != "source", "install_hint": None, "downloaded": False}
         if u["state"] == "error":
             result["error"] = self._ut("check_failed")
             return result
         if u["state"] == "unchecked":  # 从未检查过（如关闭了自动检查）：除当前版本外都为空
+            return result
+        if u["state"] == "not_published":  # 仓库还没有发布版本：清单在所有源上都是 404，不算错误
+            result["not_published"] = True
             return result
         published = (datetime.now(timezone.utc) - timedelta(days=2)).replace(hour=10, minute=0, second=0, microsecond=0)
         if u["state"] == "latest":
@@ -1115,7 +1155,7 @@ class MockApi:
 
     def download_update(self):
         u = self._update
-        if u["state"] in ("latest", "error", "unchecked"):
+        if u["state"] in ("latest", "error", "unchecked", "not_published"):
             raise ValueError(self._ut("no_update"))
         if u["state"] == "source":
             raise ValueError(self._ut("cannot_install"))
@@ -1225,15 +1265,24 @@ class MockApi:
         """调试辅助：设置模拟的更新状态。
 
         state：available 有新版本（默认）· latest 已是最新 · error 检查失败 · source 桌面从源码运行（不能安装）·
-        unchecked 从未检查过（字段为空；下次 check_update(True) 后变为 latest）。
+        unchecked 从未检查过（字段为空；下次 check_update(True) 后变为 latest）·
+        not_published 还没有发布版本（清单 404，not_published=true、error 为 null）。
         fail_download=True 时下载到一半失败（测试「重新下载」）。
         每次调用都会清掉已下载的安装包，并收回 Android「安装未知应用」的授权（下次安装先返回 needs_permission）。
         """
-        if state not in ("available", "latest", "error", "source", "unchecked"):
+        if state not in ("available", "latest", "error", "source", "unchecked", "not_published"):
             raise ValueError(f"未知的更新状态：{state}")
         self._update.update(state=state, fail_download=bool(fail_download), downloaded=False, perm_granted=False)
         if state == "unchecked":
             self._update["checked_at"] = None
+        return None
+
+    def mock_network(self, fail=None, source_last="mirror"):
+        """调试辅助：设置测试下载源的结果。fail 为失败的源：None（都成功）/ github / mirror / both；
+        source_last 为 auto 模式先试的源（test_download_sources 的 preferred）。"""
+        if fail not in _NETWORK_FAIL or source_last not in ("github", "mirror"):
+            raise ValueError(f"未知的下载源设置：{fail!r} / {source_last!r}")
+        self._network.update(fail=fail, source_last=source_last)
         return None
 
     def _push_nav(self, page: str) -> None:

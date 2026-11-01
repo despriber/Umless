@@ -696,6 +696,23 @@ mark.q { background: light-dark(rgba(13, 148, 136, .18), rgba(45, 212, 191, .25)
 .upd-note.is-warn svg { color: var(--warn); }
 #upd-box + .set-row { border-top: 1px solid var(--line); }
 
+/* 通用 → 下载源 */
+.net-mirror { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.net-mirror .set-input { width: 280px; }
+.input.is-invalid, .input.is-invalid:focus { border-color: var(--danger); box-shadow: 0 0 0 3px var(--danger-bg); }
+.field-error { max-width: 280px; font-size: var(--fs-caption); color: var(--danger); line-height: 1.5; text-align: right; }
+.net-reset { margin-left: 2px; padding: 1px 6px 1px 4px; font-size: 12.5px; vertical-align: 1px; }
+.net-box { display: flex; flex-direction: column; gap: 10px; padding: 0 18px 16px; }
+.net-box:empty { display: none; }
+.net-results { display: grid; gap: 6px; animation: page-in var(--d-slow) var(--ease) both; }
+.net-res { display: flex; align-items: center; gap: 8px; min-width: 0; padding: 9px 12px; border-radius: var(--r-sm); background: var(--surface-2); font-size: 13px; }
+.net-res svg { flex-shrink: 0; }
+.net-res.is-ok svg { color: var(--accent); }
+.net-res.is-error svg { color: var(--danger); }
+.net-name { font-weight: var(--w-medium); white-space: nowrap; }
+.net-val { margin-left: auto; min-width: 0; color: var(--text-2); text-align: right; overflow-wrap: anywhere; }
+.net-res.is-error .net-val { color: var(--danger); }
+
 #test-result:empty { display: none; }
 
 /* ================================================================ 新手引导 */

@@ -254,6 +254,11 @@
   .upd-status .set-ctl { align-self: center; }
   .upd-status .set-ctl .btn { width: 44px; padding: 0; justify-content: center; font-size: 0; gap: 0; }
   .upd-panel { padding: 0 16px 16px; }
+  .net-mirror { align-items: stretch; width: 100%; }
+  .net-mirror .set-input { width: 100%; }
+  .field-error { max-width: none; text-align: left; }
+  .net-box { padding: 0 16px 14px; }
+  .net-res { flex-wrap: wrap; }
   .upd-actions .btn { flex: 1 1 auto; justify-content: center; }
   .path { display: block; }
 

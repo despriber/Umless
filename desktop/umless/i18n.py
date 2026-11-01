@@ -192,6 +192,8 @@ ZH: dict[str, str] = {
     "update.hint_portable": "便携版不能自动安装，请到 {url} 下载新版本",
     "cfg.bad_manifest_url": "更新清单地址需要以 http:// 或 https:// 开头",
     "cfg.bad_version": "版本号格式不正确：{value}",
+    "cfg.bad_download_source": "未知的下载源：{value}",
+    "cfg.bad_mirror_url": "镜像地址需要是以 http:// 或 https:// 开头的完整地址",
 }
 
 EN: dict[str, str] = {
@@ -335,6 +337,8 @@ EN: dict[str, str] = {
     "update.hint_portable": "The portable version can't install updates automatically. Download the new version from {url}",
     "cfg.bad_manifest_url": "The update manifest URL must start with http:// or https://",
     "cfg.bad_version": "Invalid version number: {value}",
+    "cfg.bad_download_source": "Unknown download source: {value}",
+    "cfg.bad_mirror_url": "The mirror address must be a full URL starting with http:// or https://",
 }
 
 STRINGS = {"zh": ZH, "en": EN}

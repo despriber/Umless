@@ -14,7 +14,7 @@ from types import SimpleNamespace
 
 import pytest
 
-from umless import __version__, config, i18n, system, updater
+from umless import __version__, config, i18n, netsrc, system, updater
 from umless import app as app_mod
 from umless.db import DB
 from umless.webapi import Api
@@ -157,8 +157,9 @@ def test_notes_language_fallback():
 def test_sources_mirror_only_for_github():
     url = updater.MANIFEST_URL
     assert url == "https://github.com/despriber/Umless/releases/latest/download/update.json"
-    assert updater.sources(url) == ["https://gh-proxy.com/" + url, url]
-    assert updater.sources("http://127.0.0.1:1/update.json") == ["http://127.0.0.1:1/update.json"]
+    cfg = config.Config()
+    assert netsrc.candidates(url, cfg, None) == [("https://gh-proxy.com/" + url, "mirror"), (url, "github")]
+    assert netsrc.candidates("http://127.0.0.1:1/update.json", cfg, None) == [("http://127.0.0.1:1/update.json", None)]
 
 
 # ---- 检查与缓存 ----
@@ -221,7 +222,8 @@ def test_describe_shape_and_flags(home, db, monkeypatch):
     cfg = config.load()
     info = updater.describe(cfg, db, updater.check(cfg, db))
     assert set(info) == {"current", "latest", "available", "skipped", "notes", "published_at", "size",
-                         "checked_at", "error", "can_install", "install_hint", "downloaded"}
+                         "checked_at", "error", "not_published", "can_install", "install_hint", "downloaded"}
+    assert info["not_published"] is False
     assert info["current"] == __version__ and info["latest"] == "9.1.0"
     assert info["available"] and not info["skipped"] and not info["downloaded"]
     assert info["notes"] == "修复若干问题" and info["size"] == len(INSTALLER) and info["checked_at"]

@@ -179,7 +179,7 @@ First launch opens onboarding: download the model → set up the LLM (with a con
 ## Privacy
 
 - Recognition and polishing only talk to the endpoints you configure. By default ASR runs locally and the LLM points at a local Ollama (`http://localhost:11434/v1`); if you switch to a cloud API, transcripts (and the previous day's records for the daily diagnosis) are sent to that provider. No telemetry.
-- Models are downloaded from the official sherpa-onnx releases (through the gh-proxy mirror first) and verified with sha256.
+- Models are downloaded from the official sherpa-onnx releases (directly or through a mirror such as gh-proxy, see Settings → General → Download source) and verified with sha256.
 - The log only records lengths and timings unless you set `UMLESS_DEBUG=1`.
 - Blocklisted apps (password managers by default) type as usual but are not recorded; you can pause recording, set a retention period, export everything as JSON or wipe it.
 

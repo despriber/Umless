@@ -17,8 +17,8 @@ from pathlib import Path
 
 import pyperclip
 
-from . import __version__, coach, config, hotkey, i18n, metrics, models, practice, sounds, system, updater
-from .config import INTENSITIES, LANGUAGES, SCENES, SOUND_EVENTS
+from . import __version__, coach, config, hotkey, i18n, metrics, models, netsrc, practice, sounds, system, updater
+from .config import DOWNLOAD_SOURCES, INTENSITIES, LANGUAGES, SCENES, SOUND_EVENTS
 from .db import DB
 from .i18n import t
 from .jobs import Jobs
@@ -391,7 +391,7 @@ class Api:
         """校验并就地规范化（音量转为整数、提示音路径去空白）。"""
         if not isinstance(patch, dict):
             raise ValueError(t("cfg.bad_format"))
-        for section in ("app", "hotkey", "audio", "polish", "scenes", "asr", "privacy", "update"):
+        for section in ("app", "hotkey", "audio", "polish", "scenes", "asr", "privacy", "update", "network"):
             if section in patch and not isinstance(patch[section], dict):
                 raise ValueError(t("cfg.bad_format"))
         lang = patch.get("app", {}).get("language")
@@ -452,6 +452,14 @@ class Api:
             url = upd["manifest_url"] = url.strip()
             if url and not url.startswith(("http://", "https://")):
                 raise ValueError(t("cfg.bad_manifest_url"))
+        net = patch.get("network", {})
+        if "download_source" in net and net["download_source"] not in DOWNLOAD_SOURCES:
+            raise ValueError(t("cfg.bad_download_source", value=net["download_source"]))
+        if "mirror_url" in net:
+            try:
+                net["mirror_url"] = config.normalize_mirror_url(net["mirror_url"])
+            except ValueError:
+                raise ValueError(t("cfg.bad_mirror_url")) from None
 
     def save_settings(self, patch):
         self._conf()  # 先同步界面语言，校验错误按当前语言提示
@@ -493,10 +501,15 @@ class Api:
             raise ValueError(t("api.unknown_model", name=name))
 
         def work(progress):
-            models.download(name, self._conf().asr.models_path, progress)
+            cfg = self._conf()
+            models.download(name, cfg.asr.models_path, progress, cfg=cfg, db=self._db)
             return {"name": name}
 
         return self._jobs.start(work, message=t("api.preparing_download"), key=f"download:{name}")
+
+    def test_download_sources(self):
+        """测试下载源：同时请求 SenseVoice 模型安装包的前 1 KiB（直连与镜像各一次），网络错误不抛出。"""
+        return netsrc.probe_sources(self._conf(), self._db, models.url("sensevoice"))
 
     def set_autostart(self, enabled):
         system.set_autostart(bool(enabled))
@@ -584,7 +597,7 @@ class Api:
 
         def work(progress):
             try:
-                updater.download(self._db, progress)
+                updater.download(self._db, progress, self._conf())
             except updater.UpdateError as e:
                 raise RuntimeError(str(e)) from None
             return {"downloaded": True}

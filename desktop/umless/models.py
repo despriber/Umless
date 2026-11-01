@@ -1,4 +1,4 @@
-"""本地 ASR 模型下载：优先走 gh-proxy 加速，下载后用官方 sha256 校验。"""
+"""本地 ASR 模型下载：按下载源设置走 GitHub 直连或镜像（见 netsrc.py），下载后用官方 sha256 校验。"""
 
 import hashlib
 import tarfile
@@ -8,10 +8,10 @@ from pathlib import Path
 
 import httpx
 
+from . import netsrc
 from .i18n import t
 
 RELEASE = "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models"
-MIRRORS = ["https://gh-proxy.com/" + RELEASE, RELEASE]
 
 
 @dataclass(frozen=True)
@@ -39,6 +39,11 @@ MODELS = {
 }
 
 
+def url(name: str) -> str:
+    """模型安装包的 GitHub 原地址（测试下载源也用 SenseVoice 的这个地址）。"""
+    return f"{RELEASE}/{MODELS[name].archive}"
+
+
 def model_path(models_dir: Path, name: str) -> Path:
     return models_dir / MODELS[name].dirname
 
@@ -48,9 +53,13 @@ def is_downloaded(models_dir: Path, name: str) -> bool:
 
 
 def download(
-    name: str, models_dir: Path, progress: Callable[[float | None, str], None] | None = None
+    name: str, models_dir: Path, progress: Callable[[float | None, str], None] | None = None,
+    *, cfg=None, db=None,
 ) -> Path:
-    """下载并解压模型。progress(比例或 None, 说明) 用于界面进度条；不传时打印到终端。"""
+    """下载并解压模型。progress(比例或 None, 说明) 用于界面进度条；不传时打印到终端。
+
+    cfg 提供下载源设置（不传时为默认的 auto），db 用来读写上次成功的源（不传时不记录）。
+    """
     def report(p: float | None, msg: str) -> None:
         if progress:
             progress(p, msg)
@@ -65,12 +74,11 @@ def download(
     models_dir.mkdir(parents=True, exist_ok=True)
     archive = models_dir / spec.archive
 
-    for base in MIRRORS:
-        url = f"{base}/{spec.archive}"
-        report(0.0, t("models.downloading_from", url=url, size=spec.size_mb))
+    for src_url, source in netsrc.candidates(url(name), cfg, db):
+        report(0.0, t("models.downloading_from", url=src_url, size=spec.size_mb))
         sha = hashlib.sha256()
         try:
-            with httpx.stream("GET", url, follow_redirects=True, timeout=60) as r:
+            with httpx.stream("GET", src_url, follow_redirects=True, timeout=60) as r:
                 r.raise_for_status()
                 total = int(r.headers.get("content-length", 0))
                 done = 0
@@ -92,6 +100,7 @@ def download(
             report(None, t("models.checksum_failed"))
             archive.unlink(missing_ok=True)
             continue
+        netsrc.succeeded(db, source)
         report(0.96, t("models.extracting"))
         with tarfile.open(archive, "r:bz2") as tar:
             tar.extractall(models_dir, filter="data")

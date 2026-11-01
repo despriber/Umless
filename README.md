@@ -159,7 +159,7 @@ Umless 多做了一件事：**把你说的原话留在本机，算出口癖、�
 
 - **自动更新**：安装版每天检查一次新版本（「设置 → 关于」可手动检查、关闭自动检查），有新版本时在主界面和托盘提示，
   确认后自动下载、校验并安装，装完重新启动。免安装版和从源码运行只提示，需要手动下载新版本。
-- 更新只读取 GitHub Releases 上的更新清单，不上传任何数据；国内网络先走 gh-proxy 镜像。
+- 更新只读取 GitHub Releases 上的更新清单，不上传任何数据。下载源可在「设置 → 通用 → 下载源」选择自动 / GitHub 直连 / 镜像（默认自动，先走 gh-proxy 镜像），并可测试连接。
 - 卸载不会删除 `%APPDATA%\Umless` 里的配置、记录和模型。
 
 **Android**：Umless 输入法在 [despriber/Umless-Android](https://github.com/despriber/Umless-Android/releases/latest) 发布（arm64 安装包），
@@ -183,7 +183,7 @@ uv run umless                 # 启动（托盘常驻），或双击 run-umless.
 ## 隐私
 
 - 识别与润色只连接你配置的地址：默认 ASR 在本机运行，默认 LLM 指向本机 Ollama（`http://localhost:11434/v1`）；改成云端接口后，语音转写文本（以及每日诊断时前一天的记录）会发送给该服务商。没有遥测或统计上报。
-- 模型下载先尝试 gh-proxy 镜像、再回退 GitHub 官方 Release，下载后都用 sha256 校验。
+- 模型从 GitHub 官方 Release 下载（按下载源设置直连或经 gh-proxy 等镜像），下载后都用 sha256 校验。
 - 日志 `%APPDATA%\Umless\umless.log` 默认只记录字数与耗时；排查问题时设环境变量 `UMLESS_DEBUG=1` 才会写入识别原文与润色结果。
 - 应用黑名单（默认含密码管理器）里照常输入但不记录；可以暂停记录、设置保留天数，一键导出（JSON）或清空全部数据。
 - 开机自启默认关闭，可在引导页或设置里开启。

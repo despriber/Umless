@@ -11,6 +11,7 @@ import sys
 import tomllib
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
+from urllib.parse import urlsplit
 
 import tomlkit
 
@@ -34,6 +35,8 @@ SCENES = ("chat", "document", "code", "email", "default")
 INTENSITIES = ("faithful", "moderate", "restructure")
 LANGUAGES = ("auto", "zh", "en")
 SOUND_EVENTS = ("start", "stop", "done", "error")  # 开始录音 / 结束录音 / 文字已输出 / 出错或没听清
+DOWNLOAD_SOURCES = ("auto", "github", "mirror")  # 下载源：自动 / GitHub 直连 / 镜像（spec/update.md 第 2 节）
+DEFAULT_MIRROR_URL = "https://gh-proxy.com/"
 
 DEFAULT_SCENE_RULES = [
     *({"app": a, "scene": "chat"} for a in (
@@ -179,6 +182,21 @@ class UpdateConfig:
 
 
 @dataclass
+class NetworkConfig:
+    download_source: str = "auto"  # auto（先试上次成功的源）/ github（只直连）/ mirror（只走镜像）
+    mirror_url: str = DEFAULT_MIRROR_URL  # 镜像前缀：镜像地址 = mirror_url + GitHub 原地址
+
+
+def normalize_mirror_url(url) -> str:
+    """镜像地址校验并规范化（去空白、补结尾 /）；不是 http(s):// 开头的完整地址时抛出 ValueError。"""
+    url = url.strip() if isinstance(url, str) else ""
+    parts = urlsplit(url)
+    if parts.scheme not in ("http", "https") or not parts.netloc or any(c.isspace() for c in url):
+        raise ValueError(url)
+    return url if url.endswith("/") else url + "/"
+
+
+@dataclass
 class Config:
     app: AppConfig = field(default_factory=AppConfig)
     hotkey: HotkeyConfig = field(default_factory=HotkeyConfig)
@@ -192,6 +210,7 @@ class Config:
     coach: CoachConfig = field(default_factory=CoachConfig)
     privacy: PrivacyConfig = field(default_factory=PrivacyConfig)
     update: UpdateConfig = field(default_factory=UpdateConfig)
+    network: NetworkConfig = field(default_factory=NetworkConfig)
     glossary_cfg: GlossaryConfig = field(default_factory=GlossaryConfig)
 
     @property
@@ -237,6 +256,18 @@ def _pick(cls, raw: dict):
     """只取 dataclass 中声明过的字段，忽略配置里的未知键。"""
     names = cls.__dataclass_fields__.keys()
     return cls(**{k: v for k, v in raw.items() if k in names})
+
+
+def _network(raw) -> NetworkConfig:
+    """手改配置写错时退回默认值，不影响启动。"""
+    net = _pick(NetworkConfig, raw if isinstance(raw, dict) else {})
+    if net.download_source not in DOWNLOAD_SOURCES:
+        net.download_source = "auto"
+    try:
+        net.mirror_url = normalize_mirror_url(net.mirror_url)
+    except ValueError:
+        net.mirror_url = DEFAULT_MIRROR_URL
+    return net
 
 
 def ensure_file() -> Path:
@@ -300,6 +331,7 @@ def load() -> Config:
         coach=_pick(CoachConfig, raw.get("coach", {})),
         privacy=_pick(PrivacyConfig, raw.get("privacy", {})),
         update=_pick(UpdateConfig, raw.get("update", {})),
+        network=_network(raw.get("network", {})),
         glossary_cfg=_pick(GlossaryConfig, raw.get("glossary", {})),
     )
     cfg.asr.openai = asr_openai

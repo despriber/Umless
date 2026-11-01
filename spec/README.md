@@ -16,6 +16,7 @@
 |---|---|
 | [`metrics.md`](metrics.md) | 规则指标与评分的精确算法：字符规范化、difflib 复刻、口癖 / 改口 / 重复判定、分段高亮、汇总、综合分、练习分、习惯卡、取整与求和规则 |
 | [`asr.md`](asr.md) | 识别结果后处理：SenseVoice 全大写英文的大小写修正（术语表恢复、缩写保留、句首大写） |
+| [`update.md`](update.md) | 应用更新（清单、版本、安装）；第 2 节「下载源」（GitHub 直连 / 镜像、测试连接）同时适用于识别模型下载 |
 | [`constants.json`](constants.json) | 内置口癖词表、纯语气词、改口标记、权重、阈值、公式系数、指标版本；`asr` 段为大小写修正用的常见短词表等 |
 | [`prompts/`](prompts/) | 所有 LLM 提示词（纯文本），以及消息拼装规则 [`prompts/README.md`](prompts/README.md) |
 | [`practice_fallback_topics.json`](practice_fallback_topics.json) | 没有 LLM 时的内置练习题（中 / 英） |

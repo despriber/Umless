@@ -2,6 +2,7 @@
 
 GitHub Releases 上的 update.json 是唯一的信息来源：读取清单 → 比较版本 → 下载安装包并校验 sha256 →
 常驻进程与主窗口退出，安装程序静默安装后重新启动 Umless。不经过自建服务器，不上传任何数据。
+清单与安装包按下载源设置走 GitHub 直连或镜像（netsrc.py），与识别模型下载相同。
 
 检查结果缓存在 SQLite kv（update_state），常驻进程（定时检查、托盘通知）与主窗口进程（设置 → 关于）共用。
 安装更新时主窗口进程写 kv core_quit，常驻进程在 _watch 循环里看到后退出。
@@ -18,7 +19,7 @@ from pathlib import Path
 
 import httpx
 
-from . import __version__, i18n, system
+from . import __version__, i18n, netsrc, system
 from .config import Config
 from .db import DB, now_iso
 from .i18n import t
@@ -28,7 +29,6 @@ log = logging.getLogger(__name__)
 REPO = "despriber/Umless"  # 仓库改名时只改这里
 MANIFEST_URL = f"https://github.com/{REPO}/releases/latest/download/update.json"
 RELEASES_URL = f"https://github.com/{REPO}/releases/latest"
-MIRROR = "https://gh-proxy.com/"  # 与模型下载相同：先镜像，失败再直连
 SCHEMA = 1
 PLATFORM = "windows-x64"
 KIND = "installer"  # 自动更新只用 Inno Setup 安装程序；portable 仅供手动下载
@@ -50,6 +50,10 @@ _VERSION_RE = re.compile(r"^v?(\d+)\.(\d+)\.(\d+)(?:-([0-9A-Za-z.-]+))?(?:\+[0-9
 
 class UpdateError(Exception):
     """检查或下载更新失败；信息已按界面语言翻译。"""
+
+
+class NotPublished(UpdateError):
+    """所有尝试的源对清单都返回 404：仓库还没有发布正式版。不算检查失败。"""
 
 
 # ---------------------------------------------------------------- 版本
@@ -86,11 +90,6 @@ def is_valid_version(text) -> bool:
 def manifest_url(cfg: Config) -> str:
     url = str(cfg.update.manifest_url or "").strip()  # 手改配置写成非字符串时按未设置处理
     return url if url.startswith(("http://", "https://")) else MANIFEST_URL
-
-
-def sources(url: str) -> list[str]:
-    """GitHub 地址先走 gh-proxy 再直连；自定义地址（测试、自建镜像）只直连。"""
-    return [MIRROR + url, url] if url.startswith("https://github.com/") else [url]
 
 
 def select_asset(assets, platform: str = PLATFORM, kind: str = KIND) -> dict | None:
@@ -133,20 +132,31 @@ def pick_notes(notes: dict, lang: str) -> str:
     return notes.get(lang) or notes.get(other) or ""
 
 
-def fetch_manifest(url: str) -> dict:
+def fetch_manifest(url: str, cfg: Config | None = None, db: DB | None = None) -> dict:
+    """按下载源顺序读取清单（自定义地址只直连）。每个源都返回 404 时抛出 NotPublished。"""
     errors = []
-    for src in sources(url):
+    not_found = 0
+    tried = netsrc.candidates(url, cfg, db)
+    for src, source in tried:
         try:
             r = httpx.get(src, follow_redirects=True, timeout=MANIFEST_TIMEOUT_S,
                           headers={"User-Agent": f"Umless/{__version__}"})
             r.raise_for_status()
-            return parse_manifest(r.json())
+            manifest = parse_manifest(r.json())
+            netsrc.succeeded(db, source)
+            return manifest
+        except httpx.HTTPStatusError as e:
+            log.info("读取更新清单失败（%s）：HTTP %s", src, e.response.status_code)
+            not_found += e.response.status_code == 404
+            errors.append(f"HTTP {e.response.status_code}")
         except (httpx.HTTPError, ValueError) as e:  # 网络错误、非 JSON
             log.info("读取更新清单失败（%s）：%s", src, e)
             errors.append(str(e) or e.__class__.__name__)
         except UpdateError as e:  # 镜像返回了错误页面等，换下一个源
             log.info("更新清单格式有误（%s）：%s", src, e)
             errors.append(str(e))
+    if tried and not_found == len(tried):
+        raise NotPublished("HTTP 404")
     raise UpdateError(errors[-1] if errors else "no source")
 
 
@@ -174,8 +184,11 @@ def check(cfg: Config, db: DB, force: bool = False) -> dict:
     if not force and (not cfg.update.auto_check or _fresh(state, url, now)):
         return state if isinstance(state, dict) else {}
     try:
-        new = {"manifest": fetch_manifest(url), "error": None}
+        new = {"manifest": fetch_manifest(url, cfg, db), "error": None}
         log.info("检查更新：最新版本 %s，当前 %s", new["manifest"]["version"], __version__)
+    except NotPublished:
+        log.info("检查更新：还没有发布版本（清单 404）")
+        new = {"manifest": None, "error": None, "not_published": True}
     except UpdateError as e:
         log.warning("检查更新失败：%s", e)
         # 保留之前查到的清单：网络暂时不通时，已知的新版本仍然可以显示
@@ -217,6 +230,7 @@ def describe(cfg: Config, db: DB, state: dict | None) -> dict:
         "size": asset.get("size") if asset else None,
         "checked_at": state.get("checked_at"),
         "error": t("update.check_failed", error=error) if error else None,
+        "not_published": bool(state.get("not_published") and not error and not latest),
         "can_install": mode == "installed",
         "install_hint": install_hint(mode),
         "downloaded": bool(available and downloaded_installer(db, asset, latest)),
@@ -262,8 +276,12 @@ def downloaded_installer(db: DB, asset: dict | None, version: str | None) -> Pat
     return path
 
 
-def download(db: DB, progress: Callable[[float | None, str], None] | None = None) -> Path:
-    """下载缓存里的新版本安装包到 %TEMP%\\umless-update\\，校验 sha256；不一致则删除并换下一个源。"""
+def download(db: DB, progress: Callable[[float | None, str], None] | None = None,
+             cfg: Config | None = None) -> Path:
+    """下载缓存里的新版本安装包到 %TEMP%\\umless-update\\，校验 sha256；不一致则删除并换下一个源。
+
+    cfg 提供下载源设置，不传时为默认的 auto。
+    """
     def report(p: float | None, msg: str) -> None:
         if progress:
             progress(p, msg)
@@ -280,7 +298,7 @@ def download(db: DB, progress: Callable[[float | None, str], None] | None = None
             old.unlink(missing_ok=True)
     part = target.with_name(target.name + ".part")
     error = t("update.download_failed", error="no source")
-    for src in sources(asset["url"]):
+    for src, source in netsrc.candidates(asset["url"], cfg, db):
         report(0.0, t("update.downloading_from", url=src))
         sha = hashlib.sha256()
         try:
@@ -309,6 +327,7 @@ def download(db: DB, progress: Callable[[float | None, str], None] | None = None
             continue
         target.unlink(missing_ok=True)
         part.replace(target)
+        netsrc.succeeded(db, source)
         db.set_kv(DOWNLOAD_KEY, {"version": version, "path": str(target), "sha256": asset["sha256"],
                                  "at": now_iso()})
         log.info("更新 %s 已下载：%s", version, target)

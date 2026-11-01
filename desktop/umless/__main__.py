@@ -89,10 +89,15 @@ def cmd_transcribe(cfg: config.Config, args) -> None:
 
 
 def cmd_download(cfg: config.Config, args) -> None:
+    from .db import DB
     from .models import MODELS, download
 
-    for name in args.models or [cfg.asr.engine if cfg.asr.engine in MODELS else "sensevoice"]:
-        download(name, cfg.asr.models_path)
+    db = DB(config.data_dir() / "umless.db")  # 读写上次成功的下载源
+    try:
+        for name in args.models or [cfg.asr.engine if cfg.asr.engine in MODELS else "sensevoice"]:
+            download(name, cfg.asr.models_path, cfg=cfg, db=db)
+    finally:
+        db.close()
 
 
 def cmd_doctor(cfg: config.Config, _args) -> None:

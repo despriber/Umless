@@ -84,7 +84,7 @@ Android 的签名、构建环境与 Obtainium 见 Umless-Android 仓库的 `RELE
 
 ### 客户端怎么拿到更新
 
-- 安装版每 24 小时（启动 5 分钟后第一次）读一次 `releases/latest/download/update.json`，先走 gh-proxy 镜像再直连；
+- 安装版每 24 小时（启动 5 分钟后第一次）读一次 `releases/latest/download/update.json`，按下载源设置直连或走镜像（默认自动，见 `spec/update.md` 第 2 节）；
   版本更高就在主界面和托盘提示。用户确认后下载 `installer`，校验 sha256，退出 Umless，静默运行安装程序，装完自动重启。
 - 免安装版和源码运行只提示，不自动安装（`portable` 一项只给手动下载用）。
 - 用户点过「跳过此版本」的版本不再自动提示，手动检查仍会显示。

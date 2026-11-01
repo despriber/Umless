@@ -3,6 +3,7 @@ import { t, isZh } from "../i18n.js";
 // 手机布局：#settings 显示分组列表，#settings/<分组> 显示详情（带返回）；宽屏两栏，未指定分组时显示第一个。
 // Android：隐藏桌面专属设置（热键、常开麦克风、提示条、输出方式、开机自启、打开文件、Qwen3-ASR），新增「键盘」分组。
 // 关于：「更新」分组（检查 / 下载 / 安装 / 跳过），状态与顶部提示条共用 js/update.js。
+// 通用：「下载源」分组（两端都有）：自动 / GitHub 直连 / 镜像、镜像地址（失焦或回车时校验保存）、测试连接。
 import { call, runJob } from "../api.js";
 import { html, render, raw, $, $$, on } from "../dom.js";
 import { icon, logo } from "../icons.js";
@@ -45,6 +46,20 @@ function fmtPublished(s) {
   if (Number.isNaN(d.getTime())) return String(s).slice(0, 10);
   return isZh() ? `${d.getFullYear()}年${d.getMonth() + 1}月${d.getDate()}日`
     : d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+}
+
+const DEFAULT_MIRROR = "https://gh-proxy.com/";
+const NET_SOURCES = ["auto", "github", "mirror"];
+
+/** 镜像地址：http(s):// 开头的完整地址，补结尾 /；不合法时返回 null（与后端 normalize_mirror_url 一致） */
+function normalizeMirror(value) {
+  const v = String(value || "").trim();
+  if (/\s/.test(v)) return null;
+  try {
+    const u = new URL(v);
+    if (!/^https?:$/.test(u.protocol) || !u.host || !/^https?:\/\/[^/]/i.test(v)) return null;
+  } catch { return null; }
+  return v.endsWith("/") ? v : `${v}/`;
 }
 
 const secret = (path, value, placeholder = "sk-…") => html`<div class="input-group">
@@ -113,6 +128,8 @@ export async function mount(root, ctx) {
     test: null, // test_llm 结果
     testing: false,
     hkRecording: false, // 正在录制新热键
+    netTest: null, // test_download_sources 结果
+    netTesting: false,
     ime: ctx.app.ime, // Android：键盘状态 {enabled, selected}
     imeTimer: null,
     abort: new AbortController(),
@@ -188,9 +205,11 @@ export async function mount(root, ctx) {
   function general() {
     const c = cfg();
     if (android) {
-      return group(t("settings.copy49"), "", html`
-        ${row(t("settings.language"), t("settings.languageHelp"), languageSelect(c))}
-        ${row(t("settings.copy50"), "", themeSeg(c))}`);
+      return html`
+        ${group(t("settings.copy49"), "", html`
+          ${row(t("settings.language"), t("settings.languageHelp"), languageSelect(c))}
+          ${row(t("settings.copy50"), "", themeSeg(c))}`)}
+        ${networkGroup()}`;
     }
     return html`
       ${group(t("settings.copy36"), "", html`
@@ -207,7 +226,72 @@ export async function mount(root, ctx) {
         ${row(t("settings.language"), t("settings.languageHelp"), languageSelect(c))}
         ${row(t("settings.copy50"), "", themeSeg(c))}
         ${row(t("settings.copy54"), t("settings.copy55"), html`<label class="switch"><input type="checkbox" data-autostart ${st.s.autostart ? raw("checked") : ""}><span class="track"></span></label>`)}
-      `)}`;
+      `)}
+      ${networkGroup()}`;
+  }
+
+  /** 「下载源」分组：识别模型下载与应用更新共用（docs/ui-api.md「下载源」） */
+  function networkGroup() {
+    const n = cfg().network || {};
+    const mode = NET_SOURCES.includes(n.download_source) ? n.download_source : "auto";
+    const mirror = n.mirror_url || DEFAULT_MIRROR;
+    return group(t("settings.net.title"), t("settings.net.help"), html`
+      ${row(t("settings.net.mode"), t(`settings.net.${mode}Help`),
+        segmented("network.download_source", NET_SOURCES.map((k) => [k, t(`settings.net.${k}`)]), mode), { cls: "net-mode" })}
+      ${row(t("settings.net.mirrorUrl"), html`${t("settings.net.mirrorUrlHelp")}
+          <button class="link-btn net-reset" data-mirror-reset ${mirror === DEFAULT_MIRROR ? raw("hidden") : ""}>${icon("undo", 13)}${t("settings.net.reset")}</button>`,
+        html`<div class="net-mirror"><input class="input is-mono set-input" data-mirror-url value="${mirror}"
+            placeholder="${DEFAULT_MIRROR}" spellcheck="false" autocomplete="off" inputmode="url" aria-label="${t("settings.net.mirrorUrl")}" aria-describedby="mirror-error">
+          <span class="field-error" id="mirror-error" role="alert" hidden></span></div>`)}
+      ${row(t("settings.net.test"), t("settings.net.testHelp"),
+        html`<button class="btn btn-secondary btn-sm ${st.netTesting ? "is-loading" : ""}" data-net-test ${st.netTesting ? raw("disabled") : ""}>${icon("zap", 14)}${t("settings.net.test")}</button>`)}
+      <div class="net-box" id="net-result">${netResult()}</div>
+    `);
+  }
+
+  /** 测试连接的结果：每个源 ✓ 延迟 / ✗ 原因，标出自动模式优先的源 */
+  function netResult() {
+    if (st.netTesting) return html`<div class="test-box is-pending"><span class="spinner"></span>${t("settings.net.testing")}</div>`;
+    const r = st.netTest;
+    if (!r) return html``;
+    const line = (k) => {
+      const x = r[k] || {};
+      return html`<div class="net-res ${x.ok ? "is-ok" : "is-error"}" data-net-res="${k}">
+        ${icon(x.ok ? "checkCircle" : "alert", 15)}
+        <span class="net-name">${t(`settings.net.${k}`)}</span>
+        ${r.preferred === k ? html`<span class="tag is-sm">${t("settings.net.preferred")}</span>` : ""}
+        <span class="net-val ${x.ok ? "num" : ""}">${x.ok ? fmtMs(x.ms) : x.error || t("settings.net.failed")}</span>
+      </div>`;
+    };
+    // 固定了一种方式却连不上、另一种能连上时，提示换一下
+    const mode = cfg().network?.download_source;
+    const other = mode === "github" ? "mirror" : "github";
+    const suggest = (mode === "github" || mode === "mirror") && !r[mode]?.ok && r[other]?.ok
+      ? html`<div class="upd-note is-warn">${icon("info", 16)}<span>${t("settings.net.suggest", { current: t(`settings.net.${mode}`), other: t(`settings.net.${other}`) })}</span></div>` : "";
+    return html`<div class="net-results">${line("github")}${line("mirror")}</div>${suggest}`;
+  }
+
+  /** 镜像地址：校验通过才保存（立即写入，不等防抖）；不合法时在输入框下提示。
+   *  只就地更新输入框、提示与「恢复默认」，不重绘分组（失焦时用户可能正点着「测试连接」） */
+  function saveMirror(value) {
+    const input = $("[data-mirror-url]", mainEl);
+    const err = $("#mirror-error", mainEl);
+    const v = normalizeMirror(value);
+    if (input) {
+      input.classList.toggle("is-invalid", !v);
+      input.toggleAttribute("aria-invalid", !v);
+    }
+    if (err) { err.textContent = v ? "" : t("settings.net.mirrorInvalid"); err.hidden = !!v; }
+    if (!v) return saveChain;
+    if (input) input.value = v;
+    $("[data-mirror-reset]", mainEl)?.toggleAttribute("hidden", v === DEFAULT_MIRROR);
+    if (v === cfg().network?.mirror_url) return saveChain;
+    queue("network.mirror_url", v);
+    st.netTest = null; // 换了镜像，之前的测试结果不再适用
+    const box = $("#net-result", mainEl);
+    if (box && !st.netTesting) render(box, netResult());
+    flush.cancel();
+    return persistPending();
   }
 
   function languageSelect(c) {
@@ -453,6 +537,8 @@ export async function mount(root, ctx) {
     let ico, label, desc, cls = "";
     if (upd.checking) [ico, label, desc] = [html`<span class="spinner"></span>`, t("update.checking"), t("update.checkingHelp")];
     else if (failed) [ico, label, desc, cls] = [icon("alert", 18), t("update.failed"), failed, "is-error"];
+    // 仓库还没有发布版本（清单在所有源上都是 404）：不算错误
+    else if (u?.not_published) [ico, label, desc, cls] = [icon("info", 18), t("update.notPublished"), checked, "is-empty"];
     else if (u?.available) {
       [ico, label, cls] = [icon("download", 18), t("update.available", { version: u.latest }), "is-new"];
       desc = [u.published_at ? t("update.published", { date: fmtPublished(u.published_at) }) : "", fmtSize(u.size)].filter(Boolean).join(" · ");
@@ -807,6 +893,30 @@ export async function mount(root, ctx) {
         toast(`${t("settings.copy176")} ${path}`, "ok", 5000);
       } catch (err) { toastError(err); }
       b.classList.remove("is-loading");
+    }),
+    // 下载源：镜像地址失焦或回车时保存；测试连接前先保存未写入的修改
+    on(mainEl, "change", "[data-mirror-url]", (e, el) => saveMirror(el.value)),
+    on(mainEl, "keydown", "[data-mirror-url]", (e, el) => {
+      if (e.key === "Enter" && !e.isComposing) { e.preventDefault(); el.blur(); }
+    }),
+    on(mainEl, "click", "[data-mirror-reset]", () => saveMirror(DEFAULT_MIRROR)),
+    on(mainEl, "click", "[data-net-test]", async () => {
+      // 只更新按钮与结果区（测试期间切换连接方式会重绘分组，所以每次重新查找元素）
+      const paint = () => {
+        const b = $("[data-net-test]", mainEl), box = $("#net-result", mainEl);
+        if (b) { b.disabled = st.netTesting; b.classList.toggle("is-loading", st.netTesting); }
+        if (box) render(box, netResult());
+      };
+      st.netTesting = true;
+      st.netTest = null;
+      paint();
+      try {
+        flush.cancel();
+        await persistPending();
+        st.netTest = await call("test_download_sources");
+      } catch (err) { toastError(err); }
+      st.netTesting = false;
+      if (!st.abort.signal.aborted && st.section === "general") paint();
     }),
     on(mainEl, "click", "[data-open]", async (e, b) => {
       try { await call("open_path", b.dataset.open); } catch (err) { toastError(err); }

@@ -117,13 +117,22 @@ retention_days = 0
 
 [update]
 # 自动检查新版本：常驻进程启动 5 分钟后检查一次，之后每 24 小时一次。
-# 只请求 GitHub Releases 上的更新清单 update.json（先走 gh-proxy 镜像），不上传任何数据
+# 只请求 GitHub Releases 上的更新清单 update.json（下载源见 [network]），不上传任何数据
 auto_check = true
 # 点过「跳过此版本」的版本号，这个版本不再自动提示（手动检查仍会显示）
 skipped_version = ""
 # 覆盖更新清单地址，用于测试或自建镜像；留空使用
 # https://github.com/despriber/Umless/releases/latest/download/update.json
 manifest_url = ""
+
+[network]
+# 下载源，用于识别模型下载和应用更新（只影响 github.com 上的地址，自定义的更新清单地址始终直连）：
+#   auto   自动：先试上次成功的源（第一次先走镜像），失败再换另一个（默认）
+#   github GitHub 直连
+#   mirror 只走镜像
+download_source = "auto"
+# 镜像地址，实际请求 = 镜像地址 + GitHub 原地址（如 https://gh-proxy.com/https://github.com/…）
+mirror_url = "https://gh-proxy.com/"
 
 [glossary]
 # 常用专有名词，润色时用来纠正识别错误（如 "CLOUD COD" -> "Claude Code"），例如：

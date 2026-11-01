@@ -11,13 +11,49 @@
 | Android `umless-android` | `despriber/Umless-Android` | `https://github.com/despriber/Umless-Android/releases/latest/download/update.json` |
 
 - 仓库名在两端代码里各定义为一个常量（桌面 `umless/updater.py` 的 `REPO`，Android `org.umless.update` 的 `REPO`），改名时只改这一处。
-- 配置项 `update.manifest_url`（默认空）可覆盖清单地址，用于测试或自建镜像；设置界面不显示。
+- 配置项 `update.manifest_url`（默认空）可覆盖清单地址，用于测试或自建镜像；设置界面不显示。自定义地址始终直连（见第 2 节）。
 - 「latest」只指向正式版（GitHub 上非预发布、非草稿的最新 Release），预发布版本不会推送给用户。
 
-## 2. 下载镜像
+## 2. 下载源（GitHub 直连 / 镜像）
 
-清单与安装包的下载顺序与识别模型相同：先 `https://gh-proxy.com/<原地址>`，失败再直连原地址。
-每个地址的超时：清单 10 秒；安装包按连接 20 秒、读取 60 秒无数据视为失败。GitHub 的跳转（302）要跟随。
+有的网络上镜像反复失败而直连正常，有的正相反，所以下载源由用户选择。两端规则完全相同，
+**同时用于识别模型下载（SenseVoice 等 sherpa-onnx 模型）与应用更新（清单、安装包）**。
+
+**配置**（`network` 一节，两端 `get_settings().config.network` 都有）：
+
+| 键 | 取值 | 默认 |
+|---|---|---|
+| `download_source` | `"auto"` 自动 · `"github"` GitHub 直连 · `"mirror"` 镜像 | `"auto"` |
+| `mirror_url` | 镜像前缀，必须是带主机名的 `http://` / `https://` 地址；保存时去掉首尾空白并补上结尾 `/` | `"https://gh-proxy.com/"` |
+
+- `save_settings` 收到其他取值时报校验错误（`cfg.bad_download_source` / `cfg.bad_mirror_url`；空串、`null`、`ftp://…`、`gh-proxy.com` 都不合法）。
+  手改配置文件写错时按默认值处理，不影响启动。
+- 镜像地址 = `mirror_url` + GitHub 原地址，如 `https://gh-proxy.com/https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/…`。
+- **只有 `https://github.com/` 开头的地址才换源**；其他地址（如自定义的 `update.manifest_url`）始终直连。
+
+**顺序**：
+
+- `github`：只直连；`mirror`：只走镜像；失败即失败，不换另一个。
+- `auto`：先试 kv `download_source_last`（`"github"` / `"mirror"`）记录的源，没有记录时先走镜像；失败再试另一个。
+- 任何模式下**成功**后都把这次用的源写入 `download_source_last`。成功指：识别模型 sha256 校验通过；清单解析成功；
+  安装包 sha256（Android 另加签名证书）校验通过。HTTP 404、校验失败都不算成功。
+
+**超时**：清单 10 秒；安装包按连接 20 秒、读取 60 秒无数据视为失败；识别模型 60 秒。GitHub 的跳转（302）要跟随。
+
+**还没有发布版本**：读取清单时，**所有尝试过的源**都返回 HTTP 404（仓库还没有正式 Release）不算检查失败：
+`check_update` 返回 `not_published=true`、`error=null`，界面显示「暂时没有可用的更新（还没有发布版本）」。
+只要有一个源是别的错误（超时、5xx、内容不是清单），就按普通的检查失败处理。
+
+**测试连接** `test_download_sources()`：两个源同时探测，各自请求 SenseVoice 模型安装包
+（`https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/<archive>`，镜像为 `mirror_url` + 该地址）的前 1 KiB：
+
+- 请求头 `Range: bytes=0-1023`，跟随跳转，每个源超时约 8 秒；状态码 200 或 206 **且读到了正文数据**才算通（服务器忽略 Range 时读到第一块数据就断开，不下载整个文件）。
+- 结果 `{"github": {"ok", "ms", "error"}, "mirror": {...}, "preferred": "github" | "mirror"}`：`ms` 为耗时毫秒（失败时 `null`）；
+  `error` 为原始原因、不翻译（如 `HTTP 403`、`timed out`、`connection reset`），成功时 `null`。网络错误不抛出。
+- `preferred`：两个都通时取更快的（一样快时保持原来的记录），只有一个通时取它，都不通时为原来记录的源（没有记录为 `mirror`）。
+  有源通时把 `preferred` 写入 `download_source_last`，所以测试结果会影响 `auto` 下一次的顺序。
+
+桌面实现见 `desktop/umless/netsrc.py`（`models.py`、`updater.py` 共用）。
 
 ## 3. `update.json`
 
@@ -87,4 +123,5 @@ ABI：armeabi-v7a=1、arm64-v8a=2、x86=3、x86_64=4。例如 0.2.0 arm64 → 20
 
 ## 8. 界面接口
 
-见 `docs/ui-api.md` 的「更新」一节：`check_update(force)`、`download_update()`、`install_update()`、`skip_update(version)`。
+见 `docs/ui-api.md` 的「更新」一节：`check_update(force)`、`download_update()`、`install_update()`、`skip_update(version)`；
+下载源见「设置」一节的 `network` 与 `test_download_sources()`。

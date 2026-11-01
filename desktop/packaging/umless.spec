@@ -23,6 +23,8 @@ def _keep(dest: str) -> bool:
     会逐个查找并加入 PATH，缺一个就报 Cannot find win-arm64（文件都很小）。
     """
     d = "/" + dest.replace("\\", "/").lower()
+    if d.startswith("/umless/"):
+        return True  # 本项目的文件一律保留（界面会在所有平台加载 locales/android-*.js，缺了整个界面起不来）
     if "/_sounddevice_data/" in d:
         return not any(x in d for x in ("32bit", "arm64", "-asio", ".dylib"))
     return not any(x in d for x in ("android", "/clr_loader/ffi/dlls/x86/", "webbrowserinterop.x86.dll", ".dylib"))

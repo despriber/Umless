@@ -241,7 +241,8 @@
     "coach": {"enabled": true, "auto_daily": true, "min_utterances": 5, "model": ""},
     "privacy": {"record_history": true, "exclude_apps": ["KeePass.exe"], "retention_days": 0},
     "glossary": {"terms": ["Claude Code"]},
-    "update": {"auto_check": true, "skipped_version": "", "manifest_url": ""}
+    "update": {"auto_check": true, "skipped_version": "", "manifest_url": ""},
+    "network": {"download_source": "auto", "mirror_url": "https://gh-proxy.com/"}
   },
   "models": {"sensevoice": {"downloaded": true, "size_mb": 166, "name": "SenseVoice-Small"},
              "qwen3_asr": {"downloaded": false, "size_mb": 879, "name": "Qwen3-ASR-0.6B"}},
@@ -253,6 +254,9 @@
 - `output.restore_clipboard`：粘贴后是否把剪贴板恢复成原内容。默认 `false`，即无论有没有点中输入框，识别结果都留在剪贴板里，可以随时 Ctrl+V。界面上显示为反向的开关"结果保留在剪贴板"。
 - `scenes.intensity` 中的空串表示"跟随全局"；`retention_days=0` 表示永久保留；`coach.model` 为空表示与润色相同。
 - `update`：见第 8 节「更新」。界面只显示 `auto_check`（关于页「自动检查更新」开关）；`skipped_version`（由 `skip_update` 写入）与 `manifest_url`（覆盖清单地址，测试 / 镜像用）不在界面上显示。两端都有这一节。
+- `network`：下载源，识别模型下载与应用更新共用，只影响 `https://github.com/` 上的地址（规则见 `spec/update.md` 第 2 节）。两端都有这一节。
+  - `download_source`：`auto`（默认，先试上次成功的源，没有记录时先走镜像，失败换另一个）· `github`（只直连）· `mirror`（只走镜像）。
+  - `mirror_url`：镜像前缀，默认 `https://gh-proxy.com/`；实际请求为 `mirror_url` + GitHub 原地址。必须是带主机名的 `http(s)://` 地址，`save_settings` 去掉首尾空白并补结尾 `/` 后保存（返回值里是规范化后的值），否则报错。
 
 ### `save_settings(patch)` → 新的 `get_settings()` 结果
 `patch` 为部分配置（与 `config` 同结构，深度合并；列表整体替换）。常驻进程会自动热加载。
@@ -263,6 +267,17 @@
 ### `list_llm_models(base_url, api_key)` → `["deepseek-v4-flash", …]`
 
 ### `download_model(name)` → `{"job_id"}`；进度在 `progress`，结果 `{"name": "sensevoice"}`。
+
+### `test_download_sources()`
+```json
+{"github": {"ok": true, "ms": 412, "error": null},
+ "mirror": {"ok": false, "ms": null, "error": "HTTP 502"},
+ "preferred": "github"}
+```
+同时探测 GitHub 直连与镜像（按已保存的 `network.mirror_url`）：各请求 SenseVoice 模型安装包的前 1 KiB（`Range: bytes=0-1023`，跟随跳转，200 / 206 且读到正文才算通），每个源超时约 8 秒。
+- `ms`：耗时毫秒，失败时 `null`；`error`：原始失败原因（不翻译，如 `HTTP 403`、`timed out`），成功时 `null`。网络错误不抛异常。
+- `preferred`：`auto` 模式接下来先试的源——两个都通取更快的，只有一个通取它，都不通时为原来记录的源。有源通时同时写入记录，所以测试会影响 `auto` 的顺序。
+- 界面：「设置 → 通用 → 下载源」的「测试连接」，每个源一行（✓ 延迟 / ✗ 原因），`preferred` 标「自动优先」；固定了一种方式却连不上、另一种能连上时提示换一下。测试前先保存未写入的修改。
 
 ### `set_autostart(enabled)` → `null`
 
@@ -361,7 +376,7 @@ Android 端（fcitx5-android 的分支）的主 App（概览 / 报告 / 练习 /
 ```json
 {"current": "0.3.0", "latest": "0.4.0", "available": true, "skipped": false,
  "notes": "新增：……\n修复：……", "published_at": "2026-11-05T10:00:00Z", "size": 58720256,
- "checked_at": "2026-11-01T09:12:30", "error": null,
+ "checked_at": "2026-11-01T09:12:30", "error": null, "not_published": false,
  "can_install": true, "install_hint": null, "downloaded": false}
 ```
 - `force=false`：返回缓存的检查结果，不等网络（开启了自动检查且距上次检查已超过间隔时，后端自己在后台刷新；`update.auto_check` 关闭时完全不联网）。从未检查过时 `latest`、`notes`、`published_at`、`size`、`checked_at` 等都可能为 `null` / 空，界面按「还没有检查过」显示。界面在启动、回到前台、打开关于页时调用。
@@ -373,6 +388,7 @@ Android 端（fcitx5-android 的分支）的主 App（概览 / 报告 / 练习 /
 - `published_at`：清单的发布时间（UTC ISO 字符串，可带 `Z`）；`size`：安装包字节数；没有更新时两者可为 `null`。
 - `can_install=false` 时界面不提供下载，显示 `install_hint`（如桌面从源码运行：「从源码运行：用 git pull 和 uv sync 更新」）。
 - `downloaded`：`latest` 的安装包已下载并校验，可以直接安装。
+- `not_published`：所有尝试过的下载源对清单都返回 HTTP 404（仓库还没有发布正式版）。此时 `error=null`、`latest=null`、`available=false`、`checked_at` 为这次检查的时间；界面显示「暂时没有可用的更新（还没有发布版本）」而不是错误。有任何一个源是别的错误时按检查失败处理（`error` 非空，`not_published=false`）。
 
 ### `download_update()` → `{"job_id"}`
 任务键 `update:download`：正在下载时再次调用返回同一个任务。`progress` 0–1，`message` 如「正在下载 Umless-0.4.0-setup.exe… 12.3 / 56.0 MB」「正在校验文件…」；结果 `{"downloaded": true}`。sha256（Android 另有签名证书）校验不一致时删除文件，任务以 error 结束（界面显示「重新下载」）。没有可下载的更新或 `can_install=false` 时抛出错误。
@@ -388,6 +404,6 @@ Android 端（fcitx5-android 的分支）的主 App（概览 / 报告 / 练习 /
 
 ### 界面行为
 - 提示条：`check_update(false)` 返回 `available && !skipped` 时显示「Umless 0.4.0 可用」+「查看」（→ `#settings/about`）、「稍后」（本次运行内不再显示）、「跳过此版本」（`skip_update`）。在引导页与关于页不显示。
-- 关于页：状态行（检查中 / 已是最新 + 上次检查时间 / 检查失败 + 重试 / 发现新版本 + 发布日期与大小），有新版本时显示更新说明与「下载更新」→ 进度条 →「安装」（失败时「重新下载」）以及「跳过此版本」；下载在切换页面后继续。Android 返回 `needs_permission` 后回到前台时，提示「已允许后再点一次安装」，安装包不必重新下载。下面是「自动检查更新」开关（`update.auto_check`）及说明「只访问 GitHub 上的更新清单，不上传任何数据」。
+- 关于页：状态行（检查中 / 已是最新 + 上次检查时间 / 检查失败 + 重试 / 还没有发布版本 + 上次检查时间 / 发现新版本 + 发布日期与大小），有新版本时显示更新说明与「下载更新」→ 进度条 →「安装」（失败时「重新下载」）以及「跳过此版本」；下载在切换页面后继续。Android 返回 `needs_permission` 后回到前台时，提示「已允许后再点一次安装」，安装包不必重新下载。下面是「自动检查更新」开关（`update.auto_check`）及说明「只访问 GitHub 上的更新清单，不上传任何数据」。
 
-预览后端另提供 `mock_update(state, fail_download=False)`：`state` 为 `available`（默认，桌面 0.3.0 → 0.4.0，Android 0.1.1 → 0.2.0）/ `latest` / `error` / `source`（桌面从源码运行）；`fail_download=True` 时下载到一半失败。也可用 `MockApi(update=...)` 指定初始状态（不属于接口约定）。
+预览后端另提供 `mock_update(state, fail_download=False)`：`state` 为 `available`（默认，桌面 0.3.0 → 0.4.0，Android 0.1.1 → 0.2.0）/ `latest` / `error` / `not_published`（还没有发布版本）/ `unchecked`（从未检查过）/ `source`（桌面从源码运行）；`fail_download=True` 时下载到一半失败。另有 `mock_network(fail=None, source_last="mirror")` 设置 `test_download_sources` 的结果：`fail` 为失败的源 `github` / `mirror` / `both`，`source_last` 为原来记录的源。也可用 `MockApi(update=...)` 指定初始状态（不属于接口约定）。

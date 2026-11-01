@@ -95,6 +95,16 @@ def run_pyinstaller() -> None:
             sys.exit(f"PyInstaller 没有生成 {exe}")
 
 
+def check_bundle() -> None:
+    """打包结果里必须有全部界面文件：缺任何一个被 import 的 js，整个主窗口都会是空白。"""
+    src = DESKTOP / "umless" / "ui" / "web"
+    dst = DIST / "Umless" / "_internal" / "umless" / "ui" / "web"
+    missing = [str(f.relative_to(src)) for f in src.rglob("*") if f.is_file() and not (dst / f.relative_to(src)).is_file()]
+    if missing:
+        sys.exit("打包结果缺少界面文件：" + "、".join(sorted(missing)))
+    print(f"界面文件齐全：{sum(1 for f in src.rglob('*') if f.is_file())} 个", flush=True)
+
+
 def make_zip(version: str) -> Path:
     base = DIST / f"Umless-{version}-portable"
     Path(str(base) + ".zip").unlink(missing_ok=True)
@@ -147,6 +157,7 @@ def main() -> None:
     print(f"Umless {version}", flush=True)
     icon = generate(version)
     run_pyinstaller()
+    check_bundle()
     files = [("portable", make_zip(version))]
 
     if not args.no_installer:

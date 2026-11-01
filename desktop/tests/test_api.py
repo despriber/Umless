@@ -392,7 +392,7 @@ def _wait_job(mock, job_id):
 
 
 UPDATE_KEYS = {"current", "latest", "available", "skipped", "notes", "published_at", "size", "checked_at", "error",
-               "can_install", "install_hint", "downloaded"}
+               "not_published", "can_install", "install_hint", "downloaded"}
 
 
 @pytest.mark.parametrize("platform", ["windows", "android"])
@@ -427,6 +427,37 @@ def test_mock_api_update(platform):
         mock.download_update()
     mock.mock_update("available", fail_download=True)
     assert _wait_job(mock, mock.download_update()["job_id"])["state"] == "error"
+    mock.mock_update("not_published")
+    info = mock.check_update(True)
+    assert set(info) == UPDATE_KEYS
+    assert info["not_published"] and info["error"] is None and info["latest"] is None and not info["available"]
+    with pytest.raises(ValueError):
+        mock.download_update()
+
+
+@pytest.mark.parametrize("platform", ["windows", "android"])
+def test_mock_api_download_sources(platform):
+    """模拟后端的下载源（docs/ui-api.md「下载源」）：network 配置校验、测试连接与失败开关。"""
+    mock = MockApi(platform=platform)
+    assert mock.get_settings()["config"]["network"] == {"download_source": "auto", "mirror_url": "https://gh-proxy.com/"}
+    res = mock.save_settings({"network": {"download_source": "github", "mirror_url": " https://ghfast.top "}})
+    assert res["config"]["network"] == {"download_source": "github", "mirror_url": "https://ghfast.top/"}
+    for bad in ({"download_source": "fast"}, {"mirror_url": "ghfast.top"}):
+        with pytest.raises(ValueError):
+            mock.save_settings({"network": bad})
+    res = mock.test_download_sources()
+    assert set(res) == {"github", "mirror", "preferred"} and res["preferred"] == "mirror"
+    assert all(set(res[s]) == {"ok", "ms", "error"} and res[s]["ok"] and res[s]["ms"] > 0 for s in ("github", "mirror"))
+    mock.mock_network(fail="mirror", source_last="github")
+    res = mock.test_download_sources()
+    assert res["github"]["ok"] and res["mirror"] == {"ok": False, "ms": None, "error": "HTTP 502"}
+    assert res["preferred"] == "github"
+    with pytest.raises(ValueError):
+        mock.mock_network(fail="nope")
+
+
+def test_mock_and_real_network_config_match(api):
+    assert MockApi().get_settings()["config"]["network"] == api.get_settings()["config"]["network"]
 
 
 def test_mock_api_update_from_source():
