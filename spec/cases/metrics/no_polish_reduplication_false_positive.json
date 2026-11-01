@@ -1,0 +1,42 @@
+{
+  "name": "no_polish_reduplication_false_positive",
+  "raw": "这个问题我们研究研究，回头再商量商量。",
+  "polished": null,
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 17,
+    "fillers": {},
+    "filler_count": 0,
+    "repeat_count": 2,
+    "correction_count": 0,
+    "rewrite_ratio": null,
+    "cpm": null,
+    "fluency": 100.0,
+    "concision": 24.4,
+    "scoreable": true,
+    "highlights": [
+      [
+        "这个问题我们研究",
+        "keep"
+      ],
+      [
+        "研究",
+        "repeat"
+      ],
+      [
+        "，回头再商量",
+        "keep"
+      ],
+      [
+        "商量",
+        "repeat"
+      ],
+      [
+        "。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

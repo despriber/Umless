@@ -1,0 +1,32 @@
+{
+  "name": "cpm_zero_duration",
+  "raw": "嗯，好的，我知道了。",
+  "polished": "好的，我知道了。",
+  "duration_s": 0.0,
+  "lexicon": null,
+  "expected": {
+    "chars": 7,
+    "fillers": {
+      "嗯": 1
+    },
+    "filler_count": 1,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.077,
+    "cpm": null,
+    "fluency": 27.6,
+    "concision": 100.0,
+    "scoreable": false,
+    "highlights": [
+      [
+        "嗯",
+        "filler"
+      ],
+      [
+        "，好的，我知道了。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

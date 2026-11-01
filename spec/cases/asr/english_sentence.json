@@ -1,0 +1,6 @@
+{
+  "name": "english_sentence",
+  "input": "HELLO EVERYONE THIS IS A TEST",
+  "glossary": [],
+  "expected": "Hello everyone this is a test"
+}

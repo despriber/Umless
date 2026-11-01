@@ -1,0 +1,188 @@
+{
+  "kind": "stats_of",
+  "cases": [
+    {
+      "name": "empty",
+      "input": {
+        "rows": []
+      },
+      "expected": {
+        "n": 0,
+        "chars": 0,
+        "fillers": {},
+        "filler_count": 0,
+        "fluency": null,
+        "concision": null,
+        "rewrite_ratio": null,
+        "filler_stats": [],
+        "repeat_count": 0,
+        "correction_count": 0,
+        "fillers_per100": 0
+      }
+    },
+    {
+      "name": "missing_metrics_skipped",
+      "input": {
+        "rows": [
+          {
+            "chars": null,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": null,
+            "scoreable": true
+          },
+          {
+            "chars": 40,
+            "fillers": {
+              "嗯": 2
+            },
+            "repeat_count": 1,
+            "correction_count": 1,
+            "rewrite_ratio": 0.2,
+            "scoreable": true
+          }
+        ]
+      },
+      "expected": {
+        "n": 1,
+        "chars": 40,
+        "fillers": {
+          "嗯": 2
+        },
+        "filler_count": 2,
+        "fluency": 63.8,
+        "concision": 54.9,
+        "rewrite_ratio": 0.2,
+        "filler_stats": [
+          {
+            "word": "嗯",
+            "count": 2,
+            "per100": 5.0
+          }
+        ],
+        "repeat_count": 1,
+        "correction_count": 1,
+        "fillers_per100": 5.0
+      }
+    },
+    {
+      "name": "mixed",
+      "input": {
+        "rows": [
+          {
+            "chars": 20,
+            "fillers": {
+              "嗯": 2
+            },
+            "repeat_count": 0,
+            "correction_count": 1,
+            "rewrite_ratio": 0.1,
+            "scoreable": true
+          },
+          {
+            "chars": 180,
+            "fillers": {
+              "就是": 3
+            },
+            "repeat_count": 2,
+            "correction_count": 0,
+            "rewrite_ratio": 0.3,
+            "scoreable": true
+          },
+          {
+            "chars": 9,
+            "fillers": {
+              "嗯": 5
+            },
+            "repeat_count": 3,
+            "correction_count": 3,
+            "rewrite_ratio": 0.5,
+            "scoreable": false
+          }
+        ]
+      },
+      "expected": {
+        "n": 2,
+        "chars": 200,
+        "fillers": {
+          "嗯": 2,
+          "就是": 3
+        },
+        "filler_count": 5,
+        "fluency": 79.9,
+        "concision": 83.5,
+        "rewrite_ratio": 0.2,
+        "filler_stats": [
+          {
+            "word": "就是",
+            "count": 3,
+            "per100": 1.5
+          },
+          {
+            "word": "嗯",
+            "count": 2,
+            "per100": 1.0
+          }
+        ],
+        "repeat_count": 2,
+        "correction_count": 1,
+        "fillers_per100": 2.5
+      }
+    },
+    {
+      "name": "fillers_per100_rounding",
+      "input": {
+        "rows": [
+          {
+            "chars": 30,
+            "fillers": {
+              "然后": 1
+            },
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": null,
+            "scoreable": true
+          },
+          {
+            "chars": 37,
+            "fillers": {
+              "嗯": 1
+            },
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": null,
+            "scoreable": true
+          }
+        ]
+      },
+      "expected": {
+        "n": 2,
+        "chars": 67,
+        "fillers": {
+          "然后": 1,
+          "嗯": 1
+        },
+        "filler_count": 2,
+        "fluency": 76.4,
+        "concision": 100.0,
+        "rewrite_ratio": null,
+        "filler_stats": [
+          {
+            "word": "然后",
+            "count": 1,
+            "per100": 1.49
+          },
+          {
+            "word": "嗯",
+            "count": 1,
+            "per100": 1.49
+          }
+        ],
+        "repeat_count": 0,
+        "correction_count": 0,
+        "fillers_per100": 2.99
+      }
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "name": "lexicon_english_mixed",
+  "raw": "OK，you know，就是这个意思，OK吗",
+  "polished": "就是这个意思，好吗",
+  "duration_s": null,
+  "lexicon": [
+    "OK",
+    "you know",
+    "就是"
+  ],
+  "expected": {
+    "chars": 18,
+    "fillers": {
+      "you know": 1,
+      "OK": 2
+    },
+    "filler_count": 3,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.462,
+    "cpm": null,
+    "fluency": 22.3,
+    "concision": 100.0,
+    "scoreable": true,
+    "highlights": [
+      [
+        "OK",
+        "filler"
+      ],
+      [
+        "，",
+        "keep"
+      ],
+      [
+        "you",
+        "filler"
+      ],
+      [
+        " ",
+        "keep"
+      ],
+      [
+        "know",
+        "filler"
+      ],
+      [
+        "，就是这个意思，",
+        "keep"
+      ],
+      [
+        "OK",
+        "filler"
+      ],
+      [
+        "吗",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

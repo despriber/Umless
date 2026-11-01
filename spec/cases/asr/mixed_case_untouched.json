@@ -1,0 +1,6 @@
+{
+  "name": "mixed_case_untouched",
+  "input": "iPhone 和 macOS 都很好 USE IT",
+  "glossary": [],
+  "expected": "iPhone 和 macOS 都很好 use it"
+}

@@ -1,0 +1,45 @@
+{
+  "name": "cjk_ext_b_supplementary",
+  "raw": "𠮷野家的那个牛肉饭，嗯，挺好吃的。",
+  "polished": "𠮷野家的牛肉饭挺好吃的。",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 14,
+    "fillers": {
+      "那个": 1,
+      "嗯": 1
+    },
+    "filler_count": 2,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.12,
+    "cpm": null,
+    "fluency": 27.6,
+    "concision": 100.0,
+    "scoreable": false,
+    "highlights": [
+      [
+        "𠮷野家的",
+        "keep"
+      ],
+      [
+        "那个",
+        "filler"
+      ],
+      [
+        "牛肉饭，",
+        "keep"
+      ],
+      [
+        "嗯",
+        "filler"
+      ],
+      [
+        "，挺好吃的。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

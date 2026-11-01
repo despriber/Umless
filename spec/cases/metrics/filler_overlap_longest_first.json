@@ -1,0 +1,41 @@
+{
+  "name": "filler_overlap_longest_first",
+  "raw": "就是说这个方案不行，就是成本太高了。",
+  "polished": "这个方案不行，成本太高了。",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 16,
+    "fillers": {
+      "就是说": 1,
+      "就是": 1
+    },
+    "filler_count": 2,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.185,
+    "cpm": null,
+    "fluency": 32.5,
+    "concision": 100.0,
+    "scoreable": true,
+    "highlights": [
+      [
+        "就是说",
+        "filler"
+      ],
+      [
+        "这个方案不行，",
+        "keep"
+      ],
+      [
+        "就是",
+        "filler"
+      ],
+      [
+        "成本太高了。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

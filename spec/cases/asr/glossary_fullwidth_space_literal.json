@@ -1,0 +1,8 @@
+{
+  "name": "glossary_fullwidth_space_literal",
+  "input": "CLAUDE　CODE 和 CLAUDE CODE",
+  "glossary": [
+    "Claude　Code"
+  ],
+  "expected": "Claude　Code 和 claude code"
+}

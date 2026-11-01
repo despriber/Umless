@@ -1,0 +1,30 @@
+{
+  "name": "repeat_tie_second_copy_cut",
+  "raw": "好的好的，没问题。",
+  "polished": "好的，没问题。",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 7,
+    "fillers": {},
+    "filler_count": 0,
+    "repeat_count": 1,
+    "correction_count": 0,
+    "rewrite_ratio": 0.167,
+    "cpm": null,
+    "fluency": 100.0,
+    "concision": 18.0,
+    "scoreable": false,
+    "highlights": [
+      [
+        "好的",
+        "repeat"
+      ],
+      [
+        "好的，没问题。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "name": "repeat_len10_not_detected",
+  "raw": "这个项目的进度有点慢这个项目的进度有点慢",
+  "polished": "这个项目的进度有点慢",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 20,
+    "fillers": {
+      "这个": 1
+    },
+    "filler_count": 1,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.333,
+    "cpm": null,
+    "fluency": 63.8,
+    "concision": 100.0,
+    "scoreable": true,
+    "highlights": [
+      [
+        "这个项目的进度有点慢",
+        "keep"
+      ],
+      [
+        "这个",
+        "filler"
+      ],
+      [
+        "项目的进度有点慢",
+        "cut"
+      ]
+    ],
+    "version": 1
+  }
+}

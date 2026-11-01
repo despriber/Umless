@@ -1,0 +1,32 @@
+{
+  "name": "filler_partially_kept",
+  "raw": "就是说这个方案不行，成本太高。",
+  "polished": "说这个方案不行，成本太高。",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 13,
+    "fillers": {
+      "就是": 1
+    },
+    "filler_count": 1,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.083,
+    "cpm": null,
+    "fluency": 50.0,
+    "concision": 100.0,
+    "scoreable": false,
+    "highlights": [
+      [
+        "就是",
+        "filler"
+      ],
+      [
+        "说这个方案不行，成本太高。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

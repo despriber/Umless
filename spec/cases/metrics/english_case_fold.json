@@ -1,0 +1,45 @@
+{
+  "name": "english_case_fold",
+  "raw": "我在用 GitHub Copilot 写代码，嗯，然后 PR 就提了。",
+  "polished": "我在用 github copilot 写代码，PR 就提了。",
+  "duration_s": 5.0,
+  "lexicon": null,
+  "expected": {
+    "chars": 27,
+    "fillers": {
+      "然后": 1,
+      "嗯": 1
+    },
+    "filler_count": 2,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.059,
+    "cpm": 324.0,
+    "fluency": 51.3,
+    "concision": 100.0,
+    "scoreable": true,
+    "highlights": [
+      [
+        "我在用 GitHub Copilot 写代码，",
+        "keep"
+      ],
+      [
+        "嗯",
+        "filler"
+      ],
+      [
+        "，",
+        "keep"
+      ],
+      [
+        "然后",
+        "filler"
+      ],
+      [
+        " PR 就提了。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

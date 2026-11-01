@@ -1,0 +1,38 @@
+{
+  "name": "lexicon_empty",
+  "raw": "嗯，然后我们走吧。",
+  "polished": "我们走吧。",
+  "duration_s": null,
+  "lexicon": [],
+  "expected": {
+    "chars": 7,
+    "fillers": {},
+    "filler_count": 0,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.273,
+    "cpm": null,
+    "fluency": 100.0,
+    "concision": 100.0,
+    "scoreable": false,
+    "highlights": [
+      [
+        "嗯",
+        "cut"
+      ],
+      [
+        "，",
+        "keep"
+      ],
+      [
+        "然后",
+        "cut"
+      ],
+      [
+        "我们走吧。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

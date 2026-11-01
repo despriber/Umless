@@ -1,0 +1,42 @@
+{
+  "name": "english_lexicon_uppercase_word",
+  "raw": "LIKE I said, like, it works.",
+  "polished": "As I said, it works.",
+  "duration_s": null,
+  "lexicon": [
+    "Like"
+  ],
+  "expected": {
+    "chars": 20,
+    "fillers": {
+      "Like": 2
+    },
+    "filler_count": 2,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.294,
+    "cpm": null,
+    "fluency": 40.7,
+    "concision": 100.0,
+    "scoreable": true,
+    "highlights": [
+      [
+        "LIKE",
+        "filler"
+      ],
+      [
+        " I said, ",
+        "keep"
+      ],
+      [
+        "like",
+        "filler"
+      ],
+      [
+        ", it works.",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

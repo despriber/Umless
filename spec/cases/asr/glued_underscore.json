@@ -1,0 +1,6 @@
+{
+  "name": "glued_underscore",
+  "input": "MY_VAR 和 HELLO_WORLD",
+  "glossary": [],
+  "expected": "MY_VAR 和 HELLO_WORLD"
+}

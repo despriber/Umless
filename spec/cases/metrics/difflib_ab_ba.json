@@ -1,0 +1,34 @@
+{
+  "name": "difflib_ab_ba",
+  "raw": "甲乙甲乙乙甲",
+  "polished": "乙甲甲乙",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 6,
+    "fillers": {},
+    "filler_count": 0,
+    "repeat_count": 1,
+    "correction_count": 0,
+    "rewrite_ratio": 0.6,
+    "cpm": null,
+    "fluency": 100.0,
+    "concision": 13.5,
+    "scoreable": false,
+    "highlights": [
+      [
+        "甲乙",
+        "keep"
+      ],
+      [
+        "甲乙",
+        "repeat"
+      ],
+      [
+        "乙甲",
+        "cut"
+      ]
+    ],
+    "version": 1
+  }
+}

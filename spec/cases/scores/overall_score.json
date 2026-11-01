@@ -1,0 +1,165 @@
+{
+  "kind": "overall_score",
+  "cases": [
+    {
+      "name": "all_none",
+      "input": {
+        "fluency": null,
+        "concision": null,
+        "logic": null,
+        "clarity": null
+      },
+      "expected": null
+    },
+    {
+      "name": "full",
+      "input": {
+        "fluency": 76.3,
+        "concision": 88.6,
+        "logic": 70.0,
+        "clarity": 80.0
+      },
+      "expected": 78.1
+    },
+    {
+      "name": "rules_only",
+      "input": {
+        "fluency": 76.3,
+        "concision": 88.6,
+        "logic": null,
+        "clarity": null
+      },
+      "expected": 81.2
+    },
+    {
+      "name": "missing_clarity",
+      "input": {
+        "fluency": 64.0,
+        "concision": 100.0,
+        "logic": 90.0,
+        "clarity": null
+      },
+      "expected": 82.3
+    },
+    {
+      "name": "only_fluency",
+      "input": {
+        "fluency": 41.1,
+        "concision": null,
+        "logic": null,
+        "clarity": null
+      },
+      "expected": 41.1
+    },
+    {
+      "name": "only_logic",
+      "input": {
+        "fluency": null,
+        "concision": null,
+        "logic": 74.0,
+        "clarity": null
+      },
+      "expected": 74.0
+    },
+    {
+      "name": "llm_float_artifact",
+      "input": {
+        "fluency": 80.0,
+        "concision": 80.0,
+        "logic": 74.0,
+        "clarity": 66.0
+      },
+      "expected": 75.0
+    },
+    {
+      "name": "half_0",
+      "input": {
+        "fluency": 60.3,
+        "concision": 52.8,
+        "logic": 60.0,
+        "clarity": 70.0
+      },
+      "expected": 61.1
+    },
+    {
+      "name": "half_1",
+      "input": {
+        "fluency": 60.3,
+        "concision": 52.8,
+        "logic": 70.0,
+        "clarity": 70.0
+      },
+      "expected": 63.6
+    },
+    {
+      "name": "half_2",
+      "input": {
+        "fluency": 60.3,
+        "concision": 56.3,
+        "logic": 70.0,
+        "clarity": 70.0
+      },
+      "expected": 64.3
+    },
+    {
+      "name": "half_3",
+      "input": {
+        "fluency": 60.3,
+        "concision": 52.8,
+        "logic": 74.0,
+        "clarity": 70.0
+      },
+      "expected": 64.7
+    },
+    {
+      "name": "half_4",
+      "input": {
+        "fluency": 60.3,
+        "concision": 56.3,
+        "logic": 60.0,
+        "clarity": 70.0
+      },
+      "expected": 61.9
+    },
+    {
+      "name": "half_5",
+      "input": {
+        "fluency": 60.3,
+        "concision": 63.3,
+        "logic": 70.0,
+        "clarity": 70.0
+      },
+      "expected": 65.8
+    },
+    {
+      "name": "neumaier_0",
+      "input": {
+        "fluency": 40.1,
+        "concision": 94.6,
+        "logic": 74.0,
+        "clarity": 66.0
+      },
+      "expected": 66.0
+    },
+    {
+      "name": "neumaier_1",
+      "input": {
+        "fluency": 40.1,
+        "concision": 94.6,
+        "logic": 60.0,
+        "clarity": 90.0
+      },
+      "expected": 68.5
+    },
+    {
+      "name": "neumaier_2",
+      "input": {
+        "fluency": 40.3,
+        "concision": 74.3,
+        "logic": 60.0,
+        "clarity": 90.0
+      },
+      "expected": 64.5
+    }
+  ]
+}

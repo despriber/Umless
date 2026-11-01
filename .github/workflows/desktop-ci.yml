@@ -1,0 +1,84 @@
+# 桌面端 CI：单元测试（含发布脚本）+ 界面冒烟检查（Edge 无头 + 模拟后端，不阻塞合并）。
+name: Desktop CI
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "desktop/**"
+      - "spec/**"
+      - "tools/**"
+      - "docs/release-notes/**"
+      - ".github/workflows/desktop-*.yml"
+  pull_request:
+    paths:
+      - "desktop/**"
+      - "spec/**"
+      - "tools/**"
+      - "docs/release-notes/**"
+      - ".github/workflows/desktop-*.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: desktop-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONUTF8: "1"
+  UV_PYTHON: "3.12"
+
+jobs:
+  test:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+        working-directory: desktop
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          enable-cache: true
+          cache-dependency-glob: desktop/uv.lock
+
+      - name: Unit tests
+        run: |
+          uv sync --locked
+          uv run pytest tests -q
+          uv run pytest ../tools/release/tests -q
+
+  ui-smoke:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    # 界面检查依赖 Edge 与截图时序，失败只提示、不阻塞
+    continue-on-error: true
+    defaults:
+      run:
+        shell: bash
+        working-directory: desktop
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          enable-cache: true
+          cache-dependency-glob: desktop/uv.lock
+
+      - name: UI smoke (headless Edge)
+        run: |
+          uv sync --locked
+          uv run --with playwright python tools/ui_smoke.py
+
+      - name: Upload screenshots
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: ui-smoke
+          path: desktop/.testhome/ui-smoke/
+          if-no-files-found: ignore
+          retention-days: 7

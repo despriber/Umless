@@ -1,0 +1,8 @@
+{
+  "name": "glossary_word_boundary",
+  "input": "PYTHONIC 和 PYTHON3 和 MYPYTHON",
+  "glossary": [
+    "Python"
+  ],
+  "expected": "Pythonic 和 PYTHON3 和 mypython"
+}

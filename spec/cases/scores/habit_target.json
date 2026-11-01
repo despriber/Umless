@@ -1,0 +1,101 @@
+{
+  "kind": "habit_target",
+  "cases": [
+    {
+      "name": "word_None",
+      "input": {
+        "kind": "word",
+        "baseline": null
+      },
+      "expected": null
+    },
+    {
+      "name": "word_0.29",
+      "input": {
+        "kind": "word",
+        "baseline": 0.29
+      },
+      "expected": null
+    },
+    {
+      "name": "word_0.3",
+      "input": {
+        "kind": "word",
+        "baseline": 0.3
+      },
+      "expected": 0.15
+    },
+    {
+      "name": "word_0.125",
+      "input": {
+        "kind": "word",
+        "baseline": 0.125
+      },
+      "expected": null
+    },
+    {
+      "name": "correction_0.85",
+      "input": {
+        "kind": "correction",
+        "baseline": 0.85
+      },
+      "expected": 0.42
+    },
+    {
+      "name": "repeat_2.5",
+      "input": {
+        "kind": "repeat",
+        "baseline": 2.5
+      },
+      "expected": 1.25
+    },
+    {
+      "name": "word_1.234",
+      "input": {
+        "kind": "word",
+        "baseline": 1.234
+      },
+      "expected": 0.62
+    },
+    {
+      "name": "logic_60.0",
+      "input": {
+        "kind": "logic",
+        "baseline": 60.0
+      },
+      "expected": 80.0
+    },
+    {
+      "name": "logic_89.9",
+      "input": {
+        "kind": "logic",
+        "baseline": 89.9
+      },
+      "expected": 100.0
+    },
+    {
+      "name": "logic_90.0",
+      "input": {
+        "kind": "logic",
+        "baseline": 90.0
+      },
+      "expected": null
+    },
+    {
+      "name": "clarity_85.5",
+      "input": {
+        "kind": "clarity",
+        "baseline": 85.5
+      },
+      "expected": 100.0
+    },
+    {
+      "name": "clarity_70.0",
+      "input": {
+        "kind": "clarity",
+        "baseline": 70.0
+      },
+      "expected": 90.0
+    }
+  ]
+}

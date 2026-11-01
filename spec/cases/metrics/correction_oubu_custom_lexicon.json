@@ -1,0 +1,30 @@
+{
+  "name": "correction_oubu_custom_lexicon",
+  "raw": "哦不，是周五交。",
+  "polished": "是周五交。",
+  "duration_s": null,
+  "lexicon": [],
+  "expected": {
+    "chars": 6,
+    "fillers": {},
+    "filler_count": 0,
+    "repeat_count": 0,
+    "correction_count": 1,
+    "rewrite_ratio": 0.2,
+    "cpm": null,
+    "fluency": 100.0,
+    "concision": 13.5,
+    "scoreable": false,
+    "highlights": [
+      [
+        "哦不",
+        "correction"
+      ],
+      [
+        "，是周五交。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

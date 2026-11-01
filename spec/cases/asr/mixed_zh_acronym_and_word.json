@@ -1,0 +1,6 @@
+{
+  "name": "mixed_zh_acronym_and_word",
+  "input": "我们用 GPU 跑 PYTHON 脚本",
+  "glossary": [],
+  "expected": "我们用 GPU 跑 python 脚本"
+}

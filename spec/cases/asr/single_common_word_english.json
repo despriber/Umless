@@ -1,0 +1,6 @@
+{
+  "name": "single_common_word_english",
+  "input": "YES.",
+  "glossary": [],
+  "expected": "Yes."
+}

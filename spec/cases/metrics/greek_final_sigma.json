@@ -1,0 +1,44 @@
+{
+  "name": "greek_final_sigma",
+  "raw": "ΟΔΟΣ 和 Москва，嗯。",
+  "polished": "οδος 和 москва。",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 12,
+    "fillers": {
+      "嗯": 1
+    },
+    "filler_count": 1,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.13,
+    "cpm": null,
+    "fluency": 47.2,
+    "concision": 100.0,
+    "scoreable": false,
+    "highlights": [
+      [
+        "ΟΔΟ",
+        "keep"
+      ],
+      [
+        "Σ",
+        "cut"
+      ],
+      [
+        " 和 Москва，",
+        "keep"
+      ],
+      [
+        "嗯",
+        "filler"
+      ],
+      [
+        "。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

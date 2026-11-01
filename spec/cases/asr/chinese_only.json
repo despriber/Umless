@@ -1,0 +1,10 @@
+{
+  "name": "chinese_only",
+  "input": "嗯，今天天气不错。",
+  "glossary": [
+    "Python",
+    "GitHub",
+    "Claude Code"
+  ],
+  "expected": "嗯，今天天气不错。"
+}

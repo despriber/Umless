@@ -1,0 +1,26 @@
+{
+  "name": "raw_only_punct",
+  "raw": "……，。！？  \n",
+  "polished": "。",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 0,
+    "fillers": {},
+    "filler_count": 0,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.0,
+    "cpm": null,
+    "fluency": 100.0,
+    "concision": 100.0,
+    "scoreable": false,
+    "highlights": [
+      [
+        "……，。！？  \n",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

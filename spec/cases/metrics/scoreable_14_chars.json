@@ -1,0 +1,32 @@
+{
+  "name": "scoreable_14_chars",
+  "raw": "嗯我们明天下午三点开个会吧好",
+  "polished": "我们明天下午三点开个会吧好",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 14,
+    "fillers": {
+      "嗯": 1
+    },
+    "filler_count": 1,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.037,
+    "cpm": null,
+    "fluency": 52.6,
+    "concision": 100.0,
+    "scoreable": false,
+    "highlights": [
+      [
+        "嗯",
+        "filler"
+      ],
+      [
+        "我们明天下午三点开个会吧好",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

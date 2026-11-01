@@ -1,0 +1,36 @@
+{
+  "name": "turkish_dotted_i",
+  "raw": "İstanbul 的 Ankara，嗯，都去过。",
+  "polished": "istanbul 的 Ankara 都去过。",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 19,
+    "fillers": {
+      "嗯": 1
+    },
+    "filler_count": 1,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.027,
+    "cpm": null,
+    "fluency": 62.3,
+    "concision": 100.0,
+    "scoreable": true,
+    "highlights": [
+      [
+        "İstanbul 的 Ankara，",
+        "keep"
+      ],
+      [
+        "嗯",
+        "filler"
+      ],
+      [
+        "，都去过。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

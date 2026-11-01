@@ -1,0 +1,6 @@
+{
+  "name": "curly_apostrophe",
+  "input": "I’M SURE IT’S FINE",
+  "glossary": [],
+  "expected": "I’m sure it’s fine"
+}

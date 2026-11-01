@@ -1,0 +1,6 @@
+{
+  "name": "non_ascii_letters_untouched",
+  "input": "ΑΒΓ ПРИВЕТ ÉCOLE",
+  "glossary": [],
+  "expected": "ΑΒΓ ПРИВЕТ ÉCOLE"
+}

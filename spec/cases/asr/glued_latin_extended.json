@@ -1,0 +1,6 @@
+{
+  "name": "glued_latin_extended",
+  "input": "CAFÉ AND NAÏVE",
+  "glossary": [],
+  "expected": "CAFÉ and NAÏVE"
+}

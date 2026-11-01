@@ -1,0 +1,40 @@
+{
+  "name": "repeat_separated_by_filler",
+  "raw": "我觉得，嗯，我觉得可以。",
+  "polished": "我觉得可以。",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 9,
+    "fillers": {
+      "嗯": 1
+    },
+    "filler_count": 1,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.286,
+    "cpm": null,
+    "fluency": 36.8,
+    "concision": 100.0,
+    "scoreable": false,
+    "highlights": [
+      [
+        "我觉得",
+        "cut"
+      ],
+      [
+        "，",
+        "keep"
+      ],
+      [
+        "嗯",
+        "filler"
+      ],
+      [
+        "，我觉得可以。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

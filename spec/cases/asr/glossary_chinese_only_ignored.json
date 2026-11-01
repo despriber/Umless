@@ -1,0 +1,10 @@
+{
+  "name": "glossary_chinese_only_ignored",
+  "input": "嗯，我们用 SENSEVOICE 识别",
+  "glossary": [
+    "识别",
+    "  ",
+    " SenseVoice\t"
+  ],
+  "expected": "嗯，我们用 SenseVoice 识别"
+}

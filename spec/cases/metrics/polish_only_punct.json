@@ -1,0 +1,36 @@
+{
+  "name": "polish_only_punct",
+  "raw": "嗯嗯，好的",
+  "polished": "。",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 4,
+    "fillers": {
+      "嗯": 2
+    },
+    "filler_count": 2,
+    "repeat_count": 1,
+    "correction_count": 0,
+    "rewrite_ratio": 1.0,
+    "cpm": null,
+    "fluency": 1.1,
+    "concision": 5.0,
+    "scoreable": false,
+    "highlights": [
+      [
+        "嗯嗯",
+        "filler"
+      ],
+      [
+        "，",
+        "keep"
+      ],
+      [
+        "好的",
+        "cut"
+      ]
+    ],
+    "version": 1
+  }
+}

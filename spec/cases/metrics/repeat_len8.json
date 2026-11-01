@@ -1,0 +1,30 @@
+{
+  "name": "repeat_len8",
+  "raw": "我们明天下午开会我们明天下午开会，记得带电脑。",
+  "polished": "我们明天下午开会，记得带电脑。",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 21,
+    "fillers": {},
+    "filler_count": 0,
+    "repeat_count": 1,
+    "correction_count": 0,
+    "rewrite_ratio": 0.235,
+    "cpm": null,
+    "fluency": 100.0,
+    "concision": 56.5,
+    "scoreable": true,
+    "highlights": [
+      [
+        "我们明天下午开会",
+        "repeat"
+      ],
+      [
+        "我们明天下午开会，记得带电脑。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

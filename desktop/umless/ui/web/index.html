@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+  <meta name="color-scheme" content="light dark">
+  <title>Umless</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/mobile.css">
+</head>
+<body>
+  <div id="app" class="app is-booting">
+    <aside class="sidebar" id="sidebar" aria-label="主导航"></aside>
+    <main class="main" id="main">
+      <div class="banner-slot" id="banner"></div>
+      <div class="view" id="view"></div>
+    </main>
+  </div>
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+  <div class="tooltip" id="tooltip" role="tooltip" hidden></div>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

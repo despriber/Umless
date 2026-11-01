@@ -1,0 +1,54 @@
+{
+  "name": "correction_multiple",
+  "raw": "我的意思是，准确地说，下周一上线，说错了，下周二上线。",
+  "polished": "下周二上线。",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 22,
+    "fillers": {},
+    "filler_count": 0,
+    "repeat_count": 0,
+    "correction_count": 3,
+    "rewrite_ratio": 0.63,
+    "cpm": null,
+    "fluency": 100.0,
+    "concision": 19.5,
+    "scoreable": true,
+    "highlights": [
+      [
+        "我的意思是",
+        "correction"
+      ],
+      [
+        "，",
+        "keep"
+      ],
+      [
+        "准确地说",
+        "correction"
+      ],
+      [
+        "，",
+        "keep"
+      ],
+      [
+        "下周一上线",
+        "cut"
+      ],
+      [
+        "，",
+        "keep"
+      ],
+      [
+        "说错了",
+        "correction"
+      ],
+      [
+        "，下周二上线。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "repeat_len3",
+  "raw": "我觉得我觉得这样不太好。",
+  "polished": "我觉得这样不太好。",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 11,
+    "fillers": {},
+    "filler_count": 0,
+    "repeat_count": 1,
+    "correction_count": 0,
+    "rewrite_ratio": 0.158,
+    "cpm": null,
+    "fluency": 100.0,
+    "concision": 33.6,
+    "scoreable": false,
+    "highlights": [
+      [
+        "我觉得",
+        "repeat"
+      ],
+      [
+        "我觉得这样不太好。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

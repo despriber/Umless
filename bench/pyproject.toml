@@ -1,0 +1,12 @@
+[project]
+name = "umless-bench"
+version = "0.1.0"
+description = "Umless ASR 选型对比：语气词保留率 / 准确率 / 速度"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+    "sherpa-onnx==1.13.8",
+    "numpy",
+    "soundfile",
+    "psutil",
+    "sherpa-onnx-core==1.13.8",
+]

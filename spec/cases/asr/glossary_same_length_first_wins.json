@@ -1,0 +1,9 @@
+{
+  "name": "glossary_same_length_first_wins",
+  "input": "GITHUB",
+  "glossary": [
+    "Github",
+    "GitHub"
+  ],
+  "expected": "Github"
+}

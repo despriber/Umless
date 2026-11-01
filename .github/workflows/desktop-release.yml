@@ -1,0 +1,154 @@
+# 桌面端发布：推送 v* 标签（如 v0.4.0）后打包 Windows 安装程序与免安装 zip，生成 update.json 并发布 GitHub Release。
+# 流程说明见 docs/releasing.md；清单格式见 spec/update.md。
+# 手动运行（workflow_dispatch）只打包并上传构建产物，不发布 Release，用于发版前试打包。
+name: Desktop release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: desktop-release-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  PYTHONUTF8: "1"
+  UV_PYTHON: "3.12"
+
+jobs:
+  release:
+    runs-on: windows-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup uv
+        uses: astral-sh/setup-uv@v10.3.3
+        with:
+          enable-cache: true
+          cache-dependency-glob: desktop/uv.lock
+
+      - name: Check version and release notes
+        id: info
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          mkdir -p build/release
+          gh release list --exclude-drafts --exclude-pre-releases --limit 200 \
+            --json tagName --jq '.[].tagName' > build/release/existing-tags.txt
+          tag_arg=()
+          if [ "$GITHUB_REF_TYPE" = "tag" ]; then tag_arg=(--tag "$GITHUB_REF_NAME"); fi
+          uv run --no-project python tools/release/prepare_release.py "${tag_arg[@]}" \
+            --pyproject desktop/pyproject.toml \
+            --notes-dir docs/release-notes \
+            --body-out build/release/body.md \
+            --existing-tags build/release/existing-tags.txt \
+            --manifest-hint "安装：下载 \`Umless-Setup-<版本>.exe\` 运行即可，已安装的 Umless 会自动提示更新；免安装版解压 zip 后运行，不会自动更新。Install: run \`Umless-Setup-<version>.exe\`; existing installs are notified automatically. The portable zip does not auto-update."
+
+      - name: Run tests
+        working-directory: desktop
+        run: |
+          uv sync --locked
+          uv run pytest tests -q
+          uv run pytest ../tools/release/tests -q
+
+      - name: Install Inno Setup
+        shell: pwsh
+        run: |
+          choco install innosetup -y --no-progress
+          $iscc = @(
+            "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe",
+            "${env:ProgramFiles}\Inno Setup 6\ISCC.exe"
+          ) | Where-Object { Test-Path $_ } | Select-Object -First 1
+          if (-not $iscc) { Write-Error "Inno Setup 安装后仍找不到 ISCC.exe"; exit 1 }
+          "ISCC=$iscc" | Out-File -FilePath $env:GITHUB_ENV -Append -Encoding utf8
+          Write-Host "ISCC: $iscc"
+
+      - name: Build installer and portable zip
+        working-directory: desktop
+        run: uv run --with pyinstaller python packaging/build.py --require-installer
+
+      - name: Collect release files
+        id: files
+        env:
+          VERSION: ${{ steps.info.outputs.version }}
+        run: |
+          installer="desktop/dist/Umless-Setup-${VERSION}.exe"
+          portable="desktop/dist/Umless-${VERSION}-portable.zip"
+          ls -la desktop/dist || true
+          for f in "$installer" "$portable"; do
+            if [ ! -s "$f" ]; then
+              echo "::error::找不到打包产物 $f（desktop/packaging/build.py 的输出名或版本号与预期不符）"
+              exit 1
+            fi
+          done
+          echo "installer=$installer" >> "$GITHUB_OUTPUT"
+          echo "portable=$portable" >> "$GITHUB_OUTPUT"
+
+      - name: Make update.json
+        env:
+          VERSION: ${{ steps.info.outputs.version }}
+          TAG: ${{ steps.info.outputs.tag }}
+          NOTES_ZH: ${{ steps.info.outputs.notes_zh }}
+          NOTES_EN: ${{ steps.info.outputs.notes_en }}
+          INSTALLER: ${{ steps.files.outputs.installer }}
+          PORTABLE: ${{ steps.files.outputs.portable }}
+        run: |
+          uv run --no-project python tools/release/make_update_json.py \
+            --app umless-desktop \
+            --version "$VERSION" \
+            --repo "$GITHUB_REPOSITORY" \
+            --tag "$TAG" \
+            --notes-zh "$NOTES_ZH" \
+            --notes-en "$NOTES_EN" \
+            --asset "windows-x64:installer:$INSTALLER" \
+            --asset "windows-x64:portable:$PORTABLE" \
+            --output build/release/update.json
+          uv run --no-project python tools/release/make_update_json.py --check build/release/update.json
+          cat build/release/update.json
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: umless-desktop-${{ steps.info.outputs.version }}
+          path: |
+            ${{ steps.files.outputs.installer }}
+            ${{ steps.files.outputs.portable }}
+            build/release/update.json
+            build/release/body.md
+          retention-days: 14
+
+      # 先建草稿、传完全部附件再公开，避免 releases/latest 指向一个还没有 update.json 的 Release。
+      # 同一标签重新运行时覆盖已有附件。
+      - name: Publish GitHub Release
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ steps.info.outputs.tag }}
+          VERSION: ${{ steps.info.outputs.version }}
+          PRERELEASE: ${{ steps.info.outputs.prerelease }}
+          MAKE_LATEST: ${{ steps.info.outputs.make_latest }}
+          INSTALLER: ${{ steps.files.outputs.installer }}
+          PORTABLE: ${{ steps.files.outputs.portable }}
+        run: |
+          files=("$INSTALLER" "$PORTABLE" build/release/update.json)
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release edit "$TAG" --notes-file build/release/body.md
+          else
+            gh release create "$TAG" --verify-tag --draft \
+              --title "Umless $VERSION" --notes-file build/release/body.md
+          fi
+          gh release upload "$TAG" "${files[@]}" --clobber
+          # 预发布不进 releases/latest；正式版只有不低于已发布的所有正式版时才标为 Latest
+          gh release edit "$TAG" --draft=false --prerelease="$PRERELEASE" --latest="$MAKE_LATEST"
+          gh release view "$TAG"

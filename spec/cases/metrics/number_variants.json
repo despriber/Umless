@@ -1,0 +1,36 @@
+{
+  "name": "number_variants",
+  "raw": "第①点，嗯，预算是½，Ⅻ月份交付，3点开会，²。",
+  "polished": "第①点，预算是½，Ⅻ月份交付，3点开会，²。",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 18,
+    "fillers": {
+      "嗯": 1
+    },
+    "filler_count": 1,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.029,
+    "cpm": null,
+    "fluency": 60.7,
+    "concision": 100.0,
+    "scoreable": true,
+    "highlights": [
+      [
+        "第①点，",
+        "keep"
+      ],
+      [
+        "嗯",
+        "filler"
+      ],
+      [
+        "，预算是½，Ⅻ月份交付，3点开会，²。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

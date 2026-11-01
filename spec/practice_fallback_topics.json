@@ -1,0 +1,66 @@
+{
+  "zh": [
+    {
+      "title": "介绍你最近在做的一件事",
+      "category": "项目介绍",
+      "prompt": "向一位不了解情况的同事介绍你最近在做的事。",
+      "hint": "背景 → 做了什么 → 下一步"
+    },
+    {
+      "title": "用 1 分钟做自我介绍",
+      "category": "面试",
+      "prompt": "假设你在面试开场，面试官请你做自我介绍。",
+      "hint": "我是谁 → 做过什么 → 为什么适合"
+    },
+    {
+      "title": "向外行解释一个你熟悉的概念",
+      "category": "概念讲解",
+      "prompt": "向一位完全不懂的朋友解释一个你领域里的概念。",
+      "hint": "一句话定义 → 打个比方 → 举个例子"
+    },
+    {
+      "title": "说说你对远程办公的看法",
+      "category": "观点表达",
+      "prompt": "在讨论会上表达你的观点并给出理由。",
+      "hint": "观点 → 两个理由 → 总结"
+    },
+    {
+      "title": "汇报本周的工作进展",
+      "category": "工作汇报",
+      "prompt": "在周会上向负责人汇报本周进展。",
+      "hint": "结论 → 完成了什么 → 风险与需要的支持"
+    }
+  ],
+  "en": [
+    {
+      "title": "Describe something you've been working on",
+      "category": "Project intro",
+      "prompt": "Explain what you've been working on lately to a colleague who has no context.",
+      "hint": "Background → What you did → Next steps"
+    },
+    {
+      "title": "Introduce yourself in one minute",
+      "category": "Interview",
+      "prompt": "You're at the start of an interview and the interviewer asks you to introduce yourself.",
+      "hint": "Who you are → What you've done → Why you fit"
+    },
+    {
+      "title": "Explain a concept you know well to a layperson",
+      "category": "Explain",
+      "prompt": "Explain a concept from your field to a friend with no background in it.",
+      "hint": "One-line definition → Analogy → Example"
+    },
+    {
+      "title": "Share your view on remote work",
+      "category": "Opinion",
+      "prompt": "State your position in a discussion and back it up with reasons.",
+      "hint": "Position → Two reasons → Wrap-up"
+    },
+    {
+      "title": "Report this week's progress",
+      "category": "Status update",
+      "prompt": "Update your manager on this week's progress at the weekly meeting.",
+      "hint": "Bottom line → What's done → Risks and support needed"
+    }
+  ]
+}

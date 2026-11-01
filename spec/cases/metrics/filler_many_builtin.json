@@ -1,0 +1,61 @@
+{
+  "name": "filler_many_builtin",
+  "raw": "然后呢其实反正基本上，怎么说呢，相当于说所以说那么就这样了的话对吧",
+  "polished": "就这样了",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 31,
+    "fillers": {
+      "怎么说呢": 1,
+      "相当于说": 1,
+      "所以说": 1,
+      "然后呢": 1,
+      "基本上": 1,
+      "其实": 1,
+      "反正": 1,
+      "对吧": 1,
+      "的话": 1,
+      "那么": 1
+    },
+    "filler_count": 10,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.771,
+    "cpm": null,
+    "fluency": 5.5,
+    "concision": 100.0,
+    "scoreable": true,
+    "highlights": [
+      [
+        "然后呢其实反正基本上",
+        "filler"
+      ],
+      [
+        "，",
+        "keep"
+      ],
+      [
+        "怎么说呢",
+        "filler"
+      ],
+      [
+        "，",
+        "keep"
+      ],
+      [
+        "相当于说所以说那么",
+        "filler"
+      ],
+      [
+        "就这样了",
+        "keep"
+      ],
+      [
+        "的话对吧",
+        "filler"
+      ]
+    ],
+    "version": 1
+  }
+}

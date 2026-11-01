@@ -1,0 +1,6 @@
+{
+  "name": "hyphenated",
+  "input": "E-MAIL 和 WI-FI，COVID-19",
+  "glossary": [],
+  "expected": "E-mail 和 WI-FI，covid-19"
+}

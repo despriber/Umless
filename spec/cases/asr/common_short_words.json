@@ -1,0 +1,6 @@
+{
+  "name": "common_short_words",
+  "input": "WE CAN DO IT AND YOU CAN TOO",
+  "glossary": [],
+  "expected": "We can do it and you can too"
+}

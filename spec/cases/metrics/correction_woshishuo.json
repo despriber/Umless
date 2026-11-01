@@ -1,0 +1,42 @@
+{
+  "name": "correction_woshishuo",
+  "raw": "我们周三，我是说周四交初稿。",
+  "polished": "我们周四交初稿。",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 12,
+    "fillers": {},
+    "filler_count": 0,
+    "repeat_count": 0,
+    "correction_count": 1,
+    "rewrite_ratio": 0.263,
+    "cpm": null,
+    "fluency": 100.0,
+    "concision": 36.8,
+    "scoreable": false,
+    "highlights": [
+      [
+        "我们",
+        "keep"
+      ],
+      [
+        "周三",
+        "cut"
+      ],
+      [
+        "，",
+        "keep"
+      ],
+      [
+        "我是说",
+        "correction"
+      ],
+      [
+        "周四交初稿。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

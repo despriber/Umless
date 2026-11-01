@@ -1,0 +1,6 @@
+{
+  "name": "sentence_start_after_punct",
+  "input": "YES, I DO. I'M FINE! WHY NOT? 好的。HELLO AGAIN",
+  "glossary": [],
+  "expected": "Yes, I do. I'm fine! Why not? 好的。Hello again"
+}

@@ -1,0 +1,6 @@
+{
+  "name": "already_fixed_idempotent",
+  "input": "Hello everyone. I think it's OK",
+  "glossary": [],
+  "expected": "Hello everyone. I think it's OK"
+}

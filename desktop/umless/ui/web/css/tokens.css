@@ -1,0 +1,139 @@
+/* 设计令牌。参考 Windows 11（Fluent 2 两层结构）、Radix 的 sage 灰阶 + teal、Linear 的克制用色。
+   所有颜色用 light-dark() 定义一次；默认跟随系统，<html data-theme="light|dark"> 可手动覆盖。
+
+   层级：base（窗口底 / 侧栏）→ layer（内容区）→ surface（卡片），越往上越亮；
+   浅色只用明度差 + 6% 描边分层，阴影只给浮层；深色不用阴影，靠更亮的表面和顶部高光。 */
+
+:root {
+  color-scheme: light dark;
+
+  /* 字体：英文在前，中文回落到雅黑。雅黑只有 400 / 700 两档，501 以上一律渲染为粗体 */
+  --font: "Segoe UI Variable Text", "Segoe UI", "Microsoft YaHei UI", system-ui, sans-serif;
+  --font-display: "Segoe UI Variable Display", "Segoe UI", "Microsoft YaHei UI", system-ui, sans-serif;
+  --font-mono: "Cascadia Mono", "Consolas", "Microsoft YaHei UI", monospace;
+  --w-medium: 500;   /* 仅对英文有效，中文按常规渲染 */
+  --w-strong: 600;   /* 中文下为粗体，只用于标题和关键数字 */
+
+  /* 字号阶梯 */
+  --fs-caption: 12px;
+  --fs-label: 13px;
+  --fs-body: 14px;
+  --fs-body-lg: 15px;
+  --fs-subtitle: 17px;
+  --fs-title: 26px;
+  --fs-metric: 26px;
+  --fs-hero: 52px;
+
+  /* 表面（sage 灰阶：带一点绿，和 teal 同源） */
+  --bg-base:    light-dark(#eef1f0, #121514);
+  --bg-layer:   light-dark(#f8faf9, #181b1a);
+  --surface:    light-dark(#ffffff, #1f2322);
+  --surface-2:  light-dark(#f4f6f5, #252a28);   /* 卡片内的次级区块 */
+  --surface-3:  light-dark(#ebefed, #2c3230);   /* 分段控件底、徽标底 */
+  --seg-active: light-dark(#ffffff, #3a413e);
+  --hover:      light-dark(rgba(16, 36, 30, .045), rgba(255, 255, 255, .05));
+  --press:      light-dark(rgba(16, 36, 30, .075), rgba(255, 255, 255, .08));
+  --line-subtle: light-dark(rgba(16, 36, 30, .07), rgba(255, 255, 255, .065));   /* 卡片、分隔线 */
+  --line:        light-dark(rgba(16, 36, 30, .11), rgba(255, 255, 255, .10));    /* 输入框、按钮 */
+  --line-strong: light-dark(rgba(16, 36, 30, .18), rgba(255, 255, 255, .17));    /* hover */
+  --grid:        light-dark(rgba(16, 36, 30, .06), rgba(255, 255, 255, .06));
+  --overlay:     light-dark(rgba(14, 24, 20, .30), rgba(0, 0, 0, .55));
+
+  /* 文字 */
+  --text:   light-dark(#17201c, #eceeed);
+  --text-2: light-dark(#59625e, #aab3af);
+  --text-3: light-dark(#7a837f, #838c88);
+  --text-4: light-dark(#a9b1ad, #59615d);
+
+  /* 主色 Teal：按钮底用更深的 #0f766e 以保证白字对比度 ≥ 5:1 */
+  --accent:        light-dark(#0d9488, #2dd4bf);   /* 图表、进度、选中指示 */
+  --accent-strong: light-dark(#0f766e, #2dd4bf);   /* 主按钮底 */
+  --accent-strong-hover: light-dark(#115e59, #5eead4);
+  --accent-text:   light-dark(#0f766e, #5eead4);   /* 链接与强调文字 */
+  --accent-bright: light-dark(#14b8a6, #2dd4bf);
+  --on-accent:     light-dark(#ffffff, #042f2e);
+  --accent-soft:   light-dark(#e8f5f2, rgba(45, 212, 191, .10));
+  --accent-soft-2: light-dark(#d5eeea, rgba(45, 212, 191, .16));
+  --accent-line:   light-dark(rgba(13, 148, 136, .28), rgba(45, 212, 191, .30));
+  --accent-track:  light-dark(#e1ebe8, #26302d);
+  --accent-wash:   light-dark(rgba(13, 148, 136, .09), rgba(45, 212, 191, .09));
+
+  /* 语义色：口癖琥珀 · 重复紫 · 改口蓝 · 错误红；评分涨跌 */
+  --filler:        light-dark(#a95a06, #f5b94a);
+  --filler-bg:     light-dark(#fbf0dc, rgba(245, 185, 74, .13));
+  --filler-mark:   light-dark(#e0a03a, #d99a2b);
+  --repeat:        light-dark(#6b45cc, #bba7fb);
+  --repeat-bg:     light-dark(#f0ebfc, rgba(167, 139, 250, .14));
+  --correction:    light-dark(#2d5fcf, #8fb5fa);
+  --correction-bg: light-dark(#e7eefc, rgba(96, 150, 250, .14));
+  --cut:           light-dark(#8b938f, #737b77);
+  --danger:        light-dark(#c93636, #f47a7a);
+  --danger-hover:  light-dark(#ad2c2c, #f79595);
+  --on-danger:     light-dark(#ffffff, #2b0d0d);
+  --danger-bg:     light-dark(#fcecec, rgba(244, 122, 122, .12));
+  --danger-line:   light-dark(rgba(201, 54, 54, .28), rgba(244, 122, 122, .3));
+  --good:          light-dark(#0b7d5a, #3dd6a0);
+  --bad:           light-dark(#bf4f38, #f2906f);
+  --warn:          light-dark(#a95a06, #f5b94a);
+  --warn-bg:       light-dark(#fbf3e4, rgba(245, 185, 74, .10));
+  --warn-line:     light-dark(rgba(169, 90, 6, .22), rgba(245, 185, 74, .25));
+
+  /* 场景色点 */
+  --scene-chat:     light-dark(#14a38f, #2dd4bf);
+  --scene-document: light-dark(#3a72de, #7aa7f7);
+  --scene-code:     light-dark(#7c5ce0, #a996f7);
+  --scene-email:    light-dark(#d48a1a, #f0b04a);
+  --scene-default:  light-dark(#9aa3a0, #6d7672);
+
+  /* 热力图 5 档 */
+  --heat-0: light-dark(#e9eeec, #232826);
+  --heat-1: light-dark(#bfe6df, #134a43);
+  --heat-2: light-dark(#7fd0c3, #18706a);
+  --heat-3: light-dark(#2fae9e, #22a596);
+  --heat-4: light-dark(#0f766e, #4fe0cc);
+
+  /* 阴影：只给浮起来的东西（菜单、弹窗、提示、导览） */
+  --shadow-flyout: 0 0 2px light-dark(rgba(14, 24, 20, .12), rgba(0, 0, 0, .5)),
+                   0 8px 16px light-dark(rgba(14, 24, 20, .12), rgba(0, 0, 0, .45));
+  --shadow-dialog: 0 0 8px light-dark(rgba(14, 24, 20, .10), rgba(0, 0, 0, .5)),
+                   0 32px 64px light-dark(rgba(14, 24, 20, .18), rgba(0, 0, 0, .6));
+  --shadow-btn:    0 1px 0 light-dark(rgba(14, 24, 20, .05), rgba(0, 0, 0, .2));
+  --hi:            inset 0 1px 0 light-dark(rgba(255, 255, 255, 0), rgba(255, 255, 255, .035));
+  --ring:          0 0 0 2px var(--bg-layer), 0 0 0 4px var(--accent);
+
+  /* 圆角：徽标 4 · 控件 6 · 卡片 8 · 对话框 12 */
+  --r-xs: 4px;
+  --r-sm: 6px;
+  --r: 8px;
+  --r-lg: 12px;
+
+  /* 间距（4 的倍数） */
+  --page-x: 36px;
+  --gap: 16px;
+  --sidebar-w: 216px;
+
+  /* 动效：hover 不做动画以外的过渡；弹层 160ms；面板 240ms */
+  --d-fast: 90ms;
+  --d-base: 160ms;
+  --d-slow: 240ms;
+  --ease: cubic-bezier(.16, 1, .3, 1);
+  --ease-in: cubic-bezier(.7, 0, .84, 0);
+}
+
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"]  { color-scheme: dark; }
+
+/* 中文：雅黑偏粗、偏大，行高放宽，不做负字距 */
+:root[data-lang="zh"] {
+  --fs-title: 25px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --d-fast: 0ms; --d-base: 0ms; --d-slow: 0ms; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

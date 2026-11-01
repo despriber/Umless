@@ -1,0 +1,6 @@
+{
+  "name": "sentence_start_cjk_punct",
+  "input": "我说完了！THANKS A LOT？SURE",
+  "glossary": [],
+  "expected": "我说完了！Thanks a lot？Sure"
+}

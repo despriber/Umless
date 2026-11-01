@@ -1,0 +1,104 @@
+{
+  "kind": "habit_progress",
+  "cases": [
+    {
+      "name": "lower_half",
+      "input": {
+        "kind": "word",
+        "baseline": 2.0,
+        "target": 1.0,
+        "current": 1.5,
+        "status": "active"
+      },
+      "expected": 0.5
+    },
+    {
+      "name": "lower_third",
+      "input": {
+        "kind": "repeat",
+        "baseline": 3.0,
+        "target": 1.5,
+        "current": 2.5,
+        "status": "active"
+      },
+      "expected": 0.33
+    },
+    {
+      "name": "lower_worse_clamped",
+      "input": {
+        "kind": "word",
+        "baseline": 2.0,
+        "target": 1.0,
+        "current": 2.6,
+        "status": "active"
+      },
+      "expected": 0.0
+    },
+    {
+      "name": "lower_beyond_clamped",
+      "input": {
+        "kind": "correction",
+        "baseline": 2.0,
+        "target": 1.0,
+        "current": 0.2,
+        "status": "active"
+      },
+      "expected": 1.0
+    },
+    {
+      "name": "higher",
+      "input": {
+        "kind": "logic",
+        "baseline": 60.0,
+        "target": 80.0,
+        "current": 75.0,
+        "status": "active"
+      },
+      "expected": 0.75
+    },
+    {
+      "name": "base_equals_target",
+      "input": {
+        "kind": "logic",
+        "baseline": 80.0,
+        "target": 80.0,
+        "current": 90.0,
+        "status": "active"
+      },
+      "expected": 0.0
+    },
+    {
+      "name": "current_none",
+      "input": {
+        "kind": "word",
+        "baseline": 2.0,
+        "target": 1.0,
+        "current": null,
+        "status": "active"
+      },
+      "expected": 0.0
+    },
+    {
+      "name": "achieved_forced_one",
+      "input": {
+        "kind": "word",
+        "baseline": 2.0,
+        "target": 1.0,
+        "current": 1.9,
+        "status": "achieved"
+      },
+      "expected": 1.0
+    },
+    {
+      "name": "rounding",
+      "input": {
+        "kind": "clarity",
+        "baseline": 63.0,
+        "target": 83.0,
+        "current": 70.0,
+        "status": "active"
+      },
+      "expected": 0.35
+    }
+  ]
+}

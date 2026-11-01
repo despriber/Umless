@@ -1,0 +1,6 @@
+{
+  "name": "short_common_next_to_english",
+  "input": "这个 IT DEPARTMENT 很忙",
+  "glossary": [],
+  "expected": "这个 it department 很忙"
+}

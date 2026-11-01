@@ -1,0 +1,6 @@
+{
+  "name": "i_contractions",
+  "input": "I'M HERE, I'LL GO, I'D SAY I'VE SEEN IT",
+  "glossary": [],
+  "expected": "I'm here, I'll go, I'd say I've seen it"
+}

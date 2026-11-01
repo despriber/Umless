@@ -1,0 +1,30 @@
+{
+  "name": "difflib_greedy_not_lcs",
+  "raw": "下午三点开会，三点半结束",
+  "polished": "三点开会，下午三点半结束",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 11,
+    "fillers": {},
+    "filler_count": 0,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.182,
+    "cpm": null,
+    "fluency": 100.0,
+    "concision": 100.0,
+    "scoreable": false,
+    "highlights": [
+      [
+        "下午",
+        "cut"
+      ],
+      [
+        "三点开会，三点半结束",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

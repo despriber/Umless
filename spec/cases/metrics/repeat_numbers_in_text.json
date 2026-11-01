@@ -1,0 +1,34 @@
+{
+  "name": "repeat_numbers_in_text",
+  "raw": "一二三一二三一二三",
+  "polished": "一二三",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 9,
+    "fillers": {},
+    "filler_count": 0,
+    "repeat_count": 1,
+    "correction_count": 0,
+    "rewrite_ratio": 0.5,
+    "cpm": null,
+    "fluency": 100.0,
+    "concision": 26.4,
+    "scoreable": false,
+    "highlights": [
+      [
+        "一二三",
+        "keep"
+      ],
+      [
+        "一二三",
+        "repeat"
+      ],
+      [
+        "一二三",
+        "cut"
+      ]
+    ],
+    "version": 1
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "name": "no_polish_repeats",
+  "raw": "我觉得我觉得这个这个可以，看看再说。",
+  "polished": null,
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 16,
+    "fillers": {},
+    "filler_count": 0,
+    "repeat_count": 2,
+    "correction_count": 0,
+    "rewrite_ratio": null,
+    "cpm": null,
+    "fluency": 100.0,
+    "concision": 22.3,
+    "scoreable": true,
+    "highlights": [
+      [
+        "我觉得",
+        "keep"
+      ],
+      [
+        "我觉得",
+        "repeat"
+      ],
+      [
+        "这个",
+        "keep"
+      ],
+      [
+        "这个",
+        "repeat"
+      ],
+      [
+        "可以，看看再说。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

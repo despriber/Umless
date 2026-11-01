@@ -1,0 +1,6 @@
+{
+  "name": "contraction_and_acronyms",
+  "input": "I THINK IT'S OK. THE API IS FINE",
+  "glossary": [],
+  "expected": "I think it's OK. The API is fine"
+}

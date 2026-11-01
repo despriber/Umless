@@ -1,0 +1,267 @@
+{
+  "kind": "practice_scores",
+  "cases": [
+    {
+      "name": "full",
+      "input": {
+        "llm_scores": {
+          "structure": 3.5,
+          "logic": 4,
+          "wording": 3
+        },
+        "fluency": 76.3,
+        "concision": 88.6
+      },
+      "expected": {
+        "scores": {
+          "structure": 70,
+          "logic": 80,
+          "wording": 60,
+          "fluency": 76,
+          "concision": 89
+        },
+        "overall": 75
+      }
+    },
+    {
+      "name": "llm_failed",
+      "input": {
+        "llm_scores": {},
+        "fluency": 64.0,
+        "concision": 55.1
+      },
+      "expected": {
+        "scores": {
+          "structure": null,
+          "logic": null,
+          "wording": null,
+          "fluency": 64,
+          "concision": 55
+        },
+        "overall": 60
+      }
+    },
+    {
+      "name": "fluency_half_even",
+      "input": {
+        "llm_scores": {
+          "structure": 4,
+          "logic": 4,
+          "wording": 4
+        },
+        "fluency": 76.5,
+        "concision": 77.5
+      },
+      "expected": {
+        "scores": {
+          "structure": 80,
+          "logic": 80,
+          "wording": 80,
+          "fluency": 76,
+          "concision": 78
+        },
+        "overall": 79
+      }
+    },
+    {
+      "name": "clamp_and_strings",
+      "input": {
+        "llm_scores": {
+          "structure": 7,
+          "logic": "3.5",
+          "wording": 0
+        },
+        "fluency": 100.0,
+        "concision": 100.0
+      },
+      "expected": {
+        "scores": {
+          "structure": 100,
+          "logic": 70,
+          "wording": 20,
+          "fluency": 100,
+          "concision": 100
+        },
+        "overall": 80
+      }
+    },
+    {
+      "name": "invalid_values",
+      "input": {
+        "llm_scores": {
+          "structure": "abc",
+          "logic": null,
+          "wording": [
+            1
+          ]
+        },
+        "fluency": 41.1,
+        "concision": 0.5
+      },
+      "expected": {
+        "scores": {
+          "structure": null,
+          "logic": null,
+          "wording": null,
+          "fluency": 41,
+          "concision": 0
+        },
+        "overall": 23
+      }
+    },
+    {
+      "name": "non_half_llm",
+      "input": {
+        "llm_scores": {
+          "structure": 3.3,
+          "logic": 3.7,
+          "wording": 4.25
+        },
+        "fluency": 90.0,
+        "concision": 85.0
+      },
+      "expected": {
+        "scores": {
+          "structure": 66,
+          "logic": 74,
+          "wording": 85,
+          "fluency": 90,
+          "concision": 85
+        },
+        "overall": 78
+      }
+    },
+    {
+      "name": "half_0",
+      "input": {
+        "llm_scores": {
+          "structure": 3.0,
+          "logic": 4.0,
+          "wording": 3.0
+        },
+        "fluency": 60.0,
+        "concision": 69.9
+      },
+      "expected": {
+        "scores": {
+          "structure": 60,
+          "logic": 80,
+          "wording": 60,
+          "fluency": 60,
+          "concision": 70
+        },
+        "overall": 66
+      }
+    },
+    {
+      "name": "half_1",
+      "input": {
+        "llm_scores": {
+          "structure": 3.0,
+          "logic": 4.0,
+          "wording": 3.0
+        },
+        "fluency": 60.3,
+        "concision": 69.9
+      },
+      "expected": {
+        "scores": {
+          "structure": 60,
+          "logic": 80,
+          "wording": 60,
+          "fluency": 60,
+          "concision": 70
+        },
+        "overall": 66
+      }
+    },
+    {
+      "name": "half_2",
+      "input": {
+        "llm_scores": {
+          "structure": 3.0,
+          "logic": 4.0,
+          "wording": 3.0
+        },
+        "fluency": 60.6,
+        "concision": 82.0
+      },
+      "expected": {
+        "scores": {
+          "structure": 60,
+          "logic": 80,
+          "wording": 60,
+          "fluency": 61,
+          "concision": 82
+        },
+        "overall": 68
+      }
+    },
+    {
+      "name": "half_3",
+      "input": {
+        "llm_scores": {
+          "structure": 3.0,
+          "logic": 4.0,
+          "wording": 3.0
+        },
+        "fluency": 60.0,
+        "concision": 89.7
+      },
+      "expected": {
+        "scores": {
+          "structure": 60,
+          "logic": 80,
+          "wording": 60,
+          "fluency": 60,
+          "concision": 90
+        },
+        "overall": 70
+      }
+    },
+    {
+      "name": "half_4",
+      "input": {
+        "llm_scores": {
+          "structure": 3.0,
+          "logic": 4.0,
+          "wording": 3.0
+        },
+        "fluency": 60.3,
+        "concision": 89.7
+      },
+      "expected": {
+        "scores": {
+          "structure": 60,
+          "logic": 80,
+          "wording": 60,
+          "fluency": 60,
+          "concision": 90
+        },
+        "overall": 70
+      }
+    },
+    {
+      "name": "half_5",
+      "input": {
+        "llm_scores": {
+          "structure": 3.0,
+          "logic": 4.0,
+          "wording": 3.0
+        },
+        "fluency": 60.6,
+        "concision": 62.2
+      },
+      "expected": {
+        "scores": {
+          "structure": 60,
+          "logic": 80,
+          "wording": 60,
+          "fluency": 61,
+          "concision": 62
+        },
+        "overall": 66
+      }
+    }
+  ]
+}

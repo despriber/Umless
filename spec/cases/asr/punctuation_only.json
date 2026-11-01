@@ -1,0 +1,6 @@
+{
+  "name": "punctuation_only",
+  "input": "。，！？...",
+  "glossary": [],
+  "expected": "。，！？..."
+}

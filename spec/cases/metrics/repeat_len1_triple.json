@@ -1,0 +1,34 @@
+{
+  "name": "repeat_len1_triple",
+  "raw": "这这这个功能我们先不做。",
+  "polished": "这个功能我们先不做。",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 11,
+    "fillers": {},
+    "filler_count": 0,
+    "repeat_count": 1,
+    "correction_count": 0,
+    "rewrite_ratio": 0.1,
+    "cpm": null,
+    "fluency": 100.0,
+    "concision": 33.6,
+    "scoreable": false,
+    "highlights": [
+      [
+        "这",
+        "repeat"
+      ],
+      [
+        "这",
+        "cut"
+      ],
+      [
+        "这个功能我们先不做。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

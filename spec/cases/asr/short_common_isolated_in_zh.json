@@ -1,0 +1,6 @@
+{
+  "name": "short_common_isolated_in_zh",
+  "input": "我买了 A 股，IT 部门说 NO",
+  "glossary": [],
+  "expected": "我买了 A 股，IT 部门说 NO"
+}

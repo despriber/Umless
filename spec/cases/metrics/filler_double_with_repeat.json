@@ -1,0 +1,32 @@
+{
+  "name": "filler_double_with_repeat",
+  "raw": "嗯嗯，我知道了，马上就改。",
+  "polished": "我知道了，马上就改。",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 10,
+    "fillers": {
+      "嗯": 2
+    },
+    "filler_count": 2,
+    "repeat_count": 1,
+    "correction_count": 0,
+    "rewrite_ratio": 0.111,
+    "cpm": null,
+    "fluency": 16.5,
+    "concision": 30.1,
+    "scoreable": false,
+    "highlights": [
+      [
+        "嗯嗯",
+        "filler"
+      ],
+      [
+        "，我知道了，马上就改。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

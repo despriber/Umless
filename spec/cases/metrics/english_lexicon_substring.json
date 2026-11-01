@@ -1,0 +1,73 @@
+{
+  "name": "english_lexicon_substring",
+  "raw": "Um so basically the API is down, like, totally down.",
+  "polished": "The API is totally down.",
+  "duration_s": 3.4,
+  "lexicon": [
+    "um",
+    "like",
+    "so",
+    "basically",
+    "you know"
+  ],
+  "expected": {
+    "chars": 40,
+    "fillers": {
+      "basically": 1,
+      "like": 1,
+      "um": 1,
+      "so": 1
+    },
+    "filler_count": 4,
+    "repeat_count": 1,
+    "correction_count": 0,
+    "rewrite_ratio": 0.356,
+    "cpm": 705.9,
+    "fluency": 40.7,
+    "concision": 74.1,
+    "scoreable": true,
+    "highlights": [
+      [
+        "Um",
+        "filler"
+      ],
+      [
+        " ",
+        "keep"
+      ],
+      [
+        "so",
+        "filler"
+      ],
+      [
+        " ",
+        "keep"
+      ],
+      [
+        "basically",
+        "filler"
+      ],
+      [
+        " the API is ",
+        "keep"
+      ],
+      [
+        "down",
+        "cut"
+      ],
+      [
+        ", ",
+        "keep"
+      ],
+      [
+        "like",
+        "filler"
+      ],
+      [
+        ", totally down.",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

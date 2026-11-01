@@ -1,0 +1,36 @@
+{
+  "name": "difflib_repeated_substrings",
+  "raw": "我们先看数据然后我们先看结论",
+  "polished": "我们先看结论",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 14,
+    "fillers": {
+      "然后": 1
+    },
+    "filler_count": 1,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.4,
+    "cpm": null,
+    "fluency": 52.6,
+    "concision": 100.0,
+    "scoreable": false,
+    "highlights": [
+      [
+        "我们先看数据",
+        "cut"
+      ],
+      [
+        "然后",
+        "filler"
+      ],
+      [
+        "我们先看结论",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

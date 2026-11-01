@@ -1,0 +1,6 @@
+{
+  "name": "long_words_lowercased",
+  "input": "我在 KUBERNETES 上部署了 REDIS 和 NGINX",
+  "glossary": [],
+  "expected": "我在 kubernetes 上部署了 redis 和 nginx"
+}

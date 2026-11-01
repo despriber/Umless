@@ -1,0 +1,50 @@
+{
+  "name": "no_polish_interjections",
+  "raw": "嗯，然后呃我们就先这样吧，啊对，唉。",
+  "polished": null,
+  "duration_s": 3.0,
+  "lexicon": null,
+  "expected": {
+    "chars": 14,
+    "fillers": {
+      "嗯": 1,
+      "呃": 1,
+      "唉": 1
+    },
+    "filler_count": 3,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": null,
+    "cpm": 280.0,
+    "fluency": 14.5,
+    "concision": 100.0,
+    "scoreable": false,
+    "highlights": [
+      [
+        "嗯",
+        "filler"
+      ],
+      [
+        "，然后",
+        "keep"
+      ],
+      [
+        "呃",
+        "filler"
+      ],
+      [
+        "我们就先这样吧，啊对，",
+        "keep"
+      ],
+      [
+        "唉",
+        "filler"
+      ],
+      [
+        "。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

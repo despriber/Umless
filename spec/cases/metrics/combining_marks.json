@@ -1,0 +1,36 @@
+{
+  "name": "combining_marks",
+  "raw": "café 和 café，嗯，是一样的。",
+  "polished": "café 和 café 是一样的。",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 14,
+    "fillers": {
+      "嗯": 1
+    },
+    "filler_count": 1,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.037,
+    "cpm": null,
+    "fluency": 52.6,
+    "concision": 100.0,
+    "scoreable": false,
+    "highlights": [
+      [
+        "café 和 café，",
+        "keep"
+      ],
+      [
+        "嗯",
+        "filler"
+      ],
+      [
+        "，是一样的。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

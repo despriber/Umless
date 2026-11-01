@@ -1,0 +1,48 @@
+{
+  "name": "fullwidth_vs_halfwidth",
+  "raw": "ＡＩ助手１２点开会，嗯。",
+  "polished": "AI助手12点开会。",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 10,
+    "fillers": {
+      "嗯": 1
+    },
+    "filler_count": 1,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.474,
+    "cpm": null,
+    "fluency": 40.7,
+    "concision": 100.0,
+    "scoreable": false,
+    "highlights": [
+      [
+        "ＡＩ",
+        "cut"
+      ],
+      [
+        "助手",
+        "keep"
+      ],
+      [
+        "１２",
+        "cut"
+      ],
+      [
+        "点开会，",
+        "keep"
+      ],
+      [
+        "嗯",
+        "filler"
+      ],
+      [
+        "。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

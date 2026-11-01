@@ -1,0 +1,30 @@
+{
+  "name": "correction_bushibushi_difflib",
+  "raw": "不是不是，是这样的",
+  "polished": "不是，是这样的",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 8,
+    "fillers": {},
+    "filler_count": 0,
+    "repeat_count": 1,
+    "correction_count": 0,
+    "rewrite_ratio": 0.143,
+    "cpm": null,
+    "fluency": 100.0,
+    "concision": 22.3,
+    "scoreable": false,
+    "highlights": [
+      [
+        "不是",
+        "repeat"
+      ],
+      [
+        "不是，是这样的",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

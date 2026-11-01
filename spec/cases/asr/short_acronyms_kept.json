@@ -1,0 +1,6 @@
+{
+  "name": "short_acronyms_kept",
+  "input": "PDF SQL AI UI OK APP CEO",
+  "glossary": [],
+  "expected": "PDF SQL AI UI OK APP CEO"
+}

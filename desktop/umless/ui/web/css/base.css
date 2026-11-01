@@ -1,0 +1,244 @@
+/* 基础：重置、排版、外壳布局（Windows 11 两层结构：侧栏坐在窗口底色上，内容区是一整块提亮的层） */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg-base);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: var(--fs-body);
+  line-height: 1.57;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-variant-numeric: tabular-nums;
+  overflow: hidden;
+  /* 触屏（Android WebView）：不按字号放大文字、不显示点按高亮、禁止双击缩放；对桌面无影响 */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* 像桌面应用：界面框架不可选、不可拖，指针保持箭头 */
+body { user-select: none; cursor: default; }
+input, textarea, .selectable, .selectable * { user-select: text; }
+img, svg, a { -webkit-user-drag: none; }
+
+h1, h2, h3, h4, p, ul, ol, figure, blockquote { margin: 0; padding: 0; }
+ul, ol { list-style: none; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: default; background: none; border: 0; padding: 0; }
+a { color: var(--accent-text); text-decoration: none; cursor: default; }
+svg { flex-shrink: 0; }
+[hidden] { display: none !important; }
+
+::selection { background: var(--accent-soft-2); }
+
+:focus { outline: none; }
+:focus-visible { outline: none; box-shadow: var(--ring); border-radius: var(--r-sm); }
+
+.num, .tnum { font-variant-numeric: tabular-nums; }
+
+/* 切换主题时临时关闭所有过渡，避免整屏闪烁 */
+.theme-switching *, .theme-switching *::before, .theme-switching *::after { transition: none !important; }
+
+/* 滚动条：细、圆、悬停时加深 */
+::-webkit-scrollbar { width: 12px; height: 12px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border: 4px solid transparent;
+  background-clip: content-box;
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover { background-color: var(--text-4); }
+
+/* ---------------------------------------------------------------- 外壳 */
+
+.app {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+  height: 100vh;
+}
+.app.is-booting { visibility: hidden; }
+.app.is-bare { grid-template-columns: minmax(0, 1fr); }
+.app.is-bare .sidebar { display: none; }
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  padding: 14px 10px 12px;
+  min-height: 0;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 10px 22px;
+}
+.brand-mark { width: 26px; height: 26px; border-radius: 7px; display: block; }
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: var(--w-strong);
+  letter-spacing: -.005em;
+  line-height: 1.2;
+}
+
+.nav { display: flex; flex-direction: column; gap: 2px; }
+.nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: var(--r-sm);
+  color: var(--text-2);
+  font-size: var(--fs-body);
+  font-weight: var(--w-medium);
+  transition: background var(--d-fast) linear, color var(--d-fast) linear;
+}
+.nav-item svg { color: var(--text-3); }
+.nav-item:hover { background: var(--hover); color: var(--text); }
+.nav-item:active { background: var(--press); }
+.nav-item.is-active { background: var(--press); color: var(--text); }
+.nav-item.is-active svg { color: var(--text); }
+/* Windows 11 选中指示条 */
+.nav-item.is-active::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 50%;
+  width: 3px; height: 16px;
+  margin-top: -8px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+.nav-badge {
+  margin-left: auto;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 99px;
+  background: var(--accent-soft-2);
+  color: var(--accent-text);
+  font-size: 11px;
+  font-weight: var(--w-strong);
+  display: grid;
+  place-items: center;
+}
+
+.sidebar-spacer { flex: 1; }
+
+.core-status {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 8px 2px 0;
+  padding: 12px 10px 4px;
+  border-top: 1px solid var(--line-subtle);
+  font-size: var(--fs-caption);
+  color: var(--text-3);
+  line-height: 1.5;
+}
+.core-status .dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--text-4);
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+.core-status.is-on .dot { background: var(--accent-bright); box-shadow: 0 0 0 3px var(--accent-soft-2); }
+.core-status .core-title { color: var(--text-2); }
+.core-status kbd { font-size: 10.5px; height: 18px; }
+.core-status .core-action { margin: 2px 0 0 -8px; font-size: var(--fs-caption); color: var(--accent-text); }
+
+/* 内容层：左上角圆角 + 发丝描边，像 Windows 11 NavigationView */
+.main {
+  background: var(--bg-layer);
+  border-left: 1px solid var(--line-subtle);
+  border-top: 1px solid var(--line-subtle);
+  border-top-left-radius: var(--r);
+  margin-top: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  position: relative;
+  min-width: 0;
+  box-shadow: var(--hi);
+}
+.app.is-bare .main { border: 0; border-radius: 0; background: var(--bg-layer); }
+
+.view {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 30px var(--page-x) 72px;
+}
+.app.is-bare .view { max-width: none; padding: 0; height: 100%; }
+.app.is-bare .main { scrollbar-gutter: auto; }
+
+.page { animation: page-in var(--d-slow) var(--ease) both; }
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* 页头：不放进卡片，标题 + 一行说明，操作按钮与标题底对齐 */
+.page-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 26px;
+  min-height: 48px;
+}
+.page-title {
+  font-family: var(--font-display);
+  font-size: var(--fs-title);
+  line-height: 1.3;
+  font-weight: var(--w-strong);
+}
+:root[data-lang="en"] .page-title { letter-spacing: -.012em; }
+.page-sub { color: var(--text-2); font-size: var(--fs-body); margin-top: 4px; }
+.page-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+.section-title {
+  font-size: var(--fs-body-lg);
+  font-weight: var(--w-strong);
+  margin: 36px 0 12px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.section-title .muted { font-weight: 400; font-size: var(--fs-label); color: var(--text-3); }
+.section-title .grow { flex: 1; }
+.section-title svg { align-self: center; color: var(--text-3); }
+
+/* 栅格 */
+.grid { display: grid; gap: var(--gap); }
+.grid-12 { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--gap); }
+.span-3 { grid-column: span 3; }
+.span-4 { grid-column: span 4; }
+.span-5 { grid-column: span 5; }
+.span-6 { grid-column: span 6; }
+.span-7 { grid-column: span 7; }
+.span-8 { grid-column: span 8; }
+.span-12 { grid-column: span 12; }
+
+.row { display: flex; align-items: center; gap: 8px; }
+.col { display: flex; flex-direction: column; gap: 8px; }
+.grow { flex: 1; min-width: 0; }
+.muted { color: var(--text-3); }
+.dim { color: var(--text-2); }
+.small { font-size: var(--fs-label); }
+.tiny { font-size: var(--fs-caption); }
+.strong { font-weight: var(--w-strong); }
+.ellipsis { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.mono { font-family: var(--font-mono); font-size: .92em; }
+.pretty { text-wrap: pretty; }
+
+.brand-tag { color: var(--text-3); font-size: 11px; margin-top: 4px; }

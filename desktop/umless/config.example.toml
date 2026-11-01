@@ -1,0 +1,131 @@
+# Umless 配置文件
+# 首次运行时会复制到 %APPDATA%\Umless\config.toml，之后改那份即可（托盘菜单「打开配置文件」）。
+
+[app]
+# 首次启动引导是否已完成
+onboarded = false
+# 功能导览是否已看过（引导结束后自动开始，看完或跳过后为 true）
+tour_done = false
+# 主窗口主题：system（跟随系统）| light | dark
+theme = "system"
+# 界面语言：auto（跟随 Windows 显示语言，中文系统为中文，其余为英文）| zh | en
+# 同时决定托盘菜单、提示条文字，以及诊断 / 练习点评的语言（引用的原话保持你说话的语言）
+language = "auto"
+
+[hotkey]
+# 按住说话的键，建议在设置界面里直接按键录制。可以是单个键：caps_lock（轻点仍可切换大小写）| right_ctrl | f8 | pause …
+# 也可以是组合键：ctrl+space | alt+q | ctrl+shift+f1（单独的字母、数字、空格等必须配合修饰键）
+key = "caps_lock"
+# 按住时间短于此值视为轻点：不录音，单个键（如 CapsLock）补发原有功能
+min_hold_ms = 300
+
+[audio]
+# 提示音总开关
+beep = true
+# 提示音音量 0–100（按平方曲线换算，中段变化更均匀）
+volume = 60
+# 各事件的提示音：start 开始录音 · stop 结束录音 · done 文字已输出 · error 出错或没听清
+# 取值为预设 rise（上扬）| fall（下行）| pop（气泡）| drop（水滴）| chime（铃声）| tick（轻点）
+#       | soft（柔和）| classic（经典嘀声）| low（低沉），或 .wav 文件的绝对路径（最多播放 3 秒），空串表示不播放
+sounds = { start = "rise", stop = "fall", done = "", error = "low" }
+# 常开麦克风：开口即录不丢字，但任务栏会一直显示麦克风使用中（音频只在内存保留最近 0.3 秒）
+mic_always_on = false
+# 是否保留录音文件（默认不保留，只存文本）
+keep_audio = false
+
+[asr]
+# sensevoice：本地，快、轻，保留口癖（默认）
+# qwen3_asr ：本地，更准、自带标点，但 CPU 上较慢、占内存约 3GB
+# openai    ：云端 OpenAI 兼容 /audio/transcriptions 接口（如硅基流动 SenseVoice）
+engine = "sensevoice"
+# 模型目录，留空则使用 %APPDATA%\Umless\models（用 `umless download` 下载）
+model_dir = ""
+num_threads = 4
+
+[asr.openai]
+base_url = "https://api.siliconflow.cn/v1"
+api_key = ""          # 也可用环境变量 UMLESS_ASR_API_KEY
+model = "FunAudioLLM/SenseVoiceSmall"
+
+[llm]
+# 关闭后直接输出 ASR 原文
+enabled = true
+# 任意 OpenAI 兼容接口：
+#   本地 Ollama     http://localhost:11434/v1
+#   DeepSeek        https://api.deepseek.com/v1
+#   硅基流动        https://api.siliconflow.cn/v1
+#   阿里百炼        https://dashscope.aliyuncs.com/compatible-mode/v1
+#   智谱            https://open.bigmodel.cn/api/paas/v4
+base_url = "http://localhost:11434/v1"
+api_key = ""          # 也可用环境变量 UMLESS_LLM_API_KEY
+model = "qwen3.5:2b"
+temperature = 0.2
+timeout_s = 20
+# 附加到请求体的字段，用于关闭思考模式等，例如：
+# extra_body = { enable_thinking = false }        # 百炼 / 硅基流动的 Qwen3
+# extra_body = { reasoning_effort = "none" }      # Ollama 的 OpenAI 兼容接口
+extra_body = {}
+
+[polish]
+# 润色强度（全局默认）：
+#   faithful    忠实：只去口癖、纠错、加标点，尽量保留原话
+#   moderate    适度：另外合并重复、理顺语序、精简冗余（默认）
+#   restructure 重构：另外重组逻辑、结论先行，可分段分点
+intensity = "moderate"
+
+[scenes]
+# 按前台应用自动切换表达风格（聊天 / 文档 / 代码 / 邮件 / 默认）
+enabled = true
+# 各场景的润色强度，空串表示跟随全局
+intensity = { chat = "", document = "restructure", code = "", email = "restructure", default = "" }
+# 应用 → 场景的匹配规则，不写则使用内置规则（微信、Word、VS Code、Outlook 等）
+# rules = [
+#   { app = "WeChat.exe", scene = "chat" },
+#   { app = "Typora.exe", scene = "document" },
+# ]
+
+[output]
+# paste：写入剪贴板并自动粘贴到光标处；clipboard：只写入剪贴板
+mode = "paste"
+# 自动粘贴后恢复原剪贴板内容（仅限文本）。默认 false：识别结果始终留在剪贴板里，
+# 没点中输入框时也可以随时 Ctrl+V
+restore_clipboard = false
+
+[ui]
+# 屏幕底部的状态提示条（录音中 / 识别中 / 已输入）
+overlay = true
+
+[coach]
+# 表达教练：每条输入在本地统计口癖、重复、改口；每天用 LLM 诊断一次
+enabled = true
+# 每天自动诊断前一天（样本不少于 min_utterances 条时）
+auto_daily = true
+min_utterances = 5
+# 诊断与练习评测使用的模型，留空则与润色相同（同一个 base_url）
+model = ""
+
+[privacy]
+# 暂停记录：照常输入，但不保存逐字稿（也不参与诊断）
+record_history = true
+# 在这些应用中照常输入，但不记录（默认含常见密码管理器与 Windows 凭据输入框）
+exclude_apps = [
+  "KeePass.exe", "KeePassXC.exe", "1Password.exe", "Bitwarden.exe",
+  "Enpass.exe", "KeeWeb.exe", "NordPass.exe", "CredentialUIBroker.exe",
+]
+# 记录保留天数，到期自动删除；0 表示永久保留
+retention_days = 0
+
+[update]
+# 自动检查新版本：常驻进程启动 5 分钟后检查一次，之后每 24 小时一次。
+# 只请求 GitHub Releases 上的更新清单 update.json（先走 gh-proxy 镜像），不上传任何数据
+auto_check = true
+# 点过「跳过此版本」的版本号，这个版本不再自动提示（手动检查仍会显示）
+skipped_version = ""
+# 覆盖更新清单地址，用于测试或自建镜像；留空使用
+# https://github.com/despriber/Umless/releases/latest/download/update.json
+manifest_url = ""
+
+[glossary]
+# 常用专有名词，润色时用来纠正识别错误（如 "CLOUD COD" -> "Claude Code"），例如：
+# terms = ["GitHub", "PyTorch", "Kubernetes"]
+terms = []

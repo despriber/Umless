@@ -1,0 +1,10 @@
+{
+  "name": "glossary_any_case",
+  "input": "python 和 Github 还有 claude code",
+  "glossary": [
+    "Python",
+    "GitHub",
+    "Claude Code"
+  ],
+  "expected": "Python 和 GitHub 还有 Claude Code"
+}

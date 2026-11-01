@@ -1,0 +1,60 @@
+{
+  "metrics_version": 1,
+  "min_scoreable_chars": 15,
+  "builtin_fillers": [
+    "嗯", "呃", "额", "啊", "哦", "噢", "诶", "欸", "唉",
+    "然后", "就是", "就是说", "那个", "这个", "其实", "反正", "对吧", "的话",
+    "怎么说呢", "所以说", "然后呢", "那么", "基本上", "相当于说"
+  ],
+  "interjections": ["嗯", "呃", "额", "哦", "噢", "诶", "欸", "唉"],
+  "correction_markers": ["不对", "哦不", "我是说", "我的意思是", "应该是", "准确地说", "说错了", "不是不是"],
+  "repeat": {
+    "max_len": 8,
+    "min_len_without_polish": 2
+  },
+  "score_formula": {
+    "fluency_k": 0.09,
+    "concision_k": 0.12
+  },
+  "llm_score": {
+    "min": 1.0,
+    "max": 5.0,
+    "scale": 20
+  },
+  "overall_weights": {"fluency": 0.30, "concision": 0.20, "logic": 0.25, "clarity": 0.25},
+  "practice_weights": {"structure": 0.25, "logic": 0.25, "wording": 0.15, "fluency": 0.20, "concision": 0.15},
+  "coach": {
+    "max_active_habits": 3,
+    "min_diagnosis_samples": 3,
+    "typing_cpm": 40,
+    "diagnosis_budget": 8000,
+    "diagnosis_text_max": 300
+  },
+  "habit": {
+    "lower_is_better_kinds": ["word", "repeat", "correction"],
+    "higher_is_better_kinds": ["logic", "clarity"],
+    "window_days": 7,
+    "lower_min_baseline": 0.3,
+    "lower_target_ratio": 0.5,
+    "higher_max_baseline": 90,
+    "higher_target_delta": 20,
+    "higher_target_cap": 100.0,
+    "lower_min_samples": 10,
+    "higher_min_samples": 2,
+    "min_age_days": 3
+  },
+  "asr": {
+    "short_max": 3,
+    "cjk_min_codepoint": 11904,
+    "common_words": [
+      "a", "ago", "ah", "all", "am", "an", "and", "any", "are", "as", "ask", "at",
+      "bad", "be", "big", "but", "buy", "by", "can", "day", "did", "do", "few", "for",
+      "get", "go", "got", "had", "has", "he", "her", "hey", "hi", "him", "his", "how",
+      "if", "in", "is", "it", "its", "let", "lot", "man", "may", "me", "my", "new",
+      "no", "nor", "not", "now", "of", "off", "oh", "old", "on", "one", "or", "our",
+      "out", "own", "put", "run", "say", "see", "set", "she", "so", "the", "to", "too",
+      "try", "two", "up", "us", "use", "was", "way", "we", "who", "why", "yes", "yet",
+      "you"
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "empty_raw_with_polish",
+  "raw": "",
+  "polished": "好的。",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 0,
+    "fillers": {},
+    "filler_count": 0,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 1.0,
+    "cpm": null,
+    "fluency": 100.0,
+    "concision": 100.0,
+    "scoreable": false,
+    "highlights": [],
+    "version": 1
+  }
+}

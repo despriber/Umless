@@ -1,0 +1,34 @@
+{
+  "name": "repeat_triple_dui",
+  "raw": "对对对，就是这样。",
+  "polished": "对，就是这样。",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 7,
+    "fillers": {},
+    "filler_count": 0,
+    "repeat_count": 1,
+    "correction_count": 0,
+    "rewrite_ratio": 0.167,
+    "cpm": null,
+    "fluency": 100.0,
+    "concision": 18.0,
+    "scoreable": false,
+    "highlights": [
+      [
+        "对",
+        "repeat"
+      ],
+      [
+        "对",
+        "cut"
+      ],
+      [
+        "对，就是这样。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "glossary_multiword_whitespace",
+  "input": "CLAUDE   CODE IS GREAT",
+  "glossary": [
+    "Python",
+    "GitHub",
+    "Claude Code"
+  ],
+  "expected": "Claude Code is great"
+}

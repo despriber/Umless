@@ -1,0 +1,26 @@
+{
+  "name": "repeat_reduplication_kept",
+  "raw": "谢谢你，我们再看看吧。",
+  "polished": "谢谢你，我们再看看吧。",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 9,
+    "fillers": {},
+    "filler_count": 0,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.0,
+    "cpm": null,
+    "fluency": 100.0,
+    "concision": 100.0,
+    "scoreable": false,
+    "highlights": [
+      [
+        "谢谢你，我们再看看吧。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

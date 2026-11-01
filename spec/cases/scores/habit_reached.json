@@ -1,0 +1,113 @@
+{
+  "kind": "habit_reached",
+  "cases": [
+    {
+      "name": "lower_ok",
+      "input": {
+        "kind": "word",
+        "current": 0.5,
+        "target": 0.5,
+        "n": 10,
+        "created_day": "2026-03-07",
+        "today_day": "2026-03-10"
+      },
+      "expected": true
+    },
+    {
+      "name": "lower_not_reached",
+      "input": {
+        "kind": "repeat",
+        "current": 0.51,
+        "target": 0.5,
+        "n": 30,
+        "created_day": "2026-03-01",
+        "today_day": "2026-03-10"
+      },
+      "expected": false
+    },
+    {
+      "name": "lower_few_samples",
+      "input": {
+        "kind": "correction",
+        "current": 0.1,
+        "target": 0.5,
+        "n": 9,
+        "created_day": "2026-03-01",
+        "today_day": "2026-03-10"
+      },
+      "expected": false
+    },
+    {
+      "name": "too_new",
+      "input": {
+        "kind": "word",
+        "current": 0.1,
+        "target": 0.5,
+        "n": 20,
+        "created_day": "2026-03-08",
+        "today_day": "2026-03-10"
+      },
+      "expected": false
+    },
+    {
+      "name": "higher_ok",
+      "input": {
+        "kind": "logic",
+        "current": 80.0,
+        "target": 80.0,
+        "n": 2,
+        "created_day": "2026-02-27",
+        "today_day": "2026-03-02"
+      },
+      "expected": true
+    },
+    {
+      "name": "higher_few_samples",
+      "input": {
+        "kind": "clarity",
+        "current": 90.0,
+        "target": 80.0,
+        "n": 1,
+        "created_day": "2026-02-01",
+        "today_day": "2026-03-02"
+      },
+      "expected": false
+    },
+    {
+      "name": "higher_not_reached",
+      "input": {
+        "kind": "clarity",
+        "current": 79.9,
+        "target": 80.0,
+        "n": 5,
+        "created_day": "2026-02-01",
+        "today_day": "2026-03-02"
+      },
+      "expected": false
+    },
+    {
+      "name": "leap_day_too_new",
+      "input": {
+        "kind": "logic",
+        "current": 90.0,
+        "target": 80.0,
+        "n": 3,
+        "created_day": "2028-02-29",
+        "today_day": "2028-03-02"
+      },
+      "expected": false
+    },
+    {
+      "name": "leap_day_ok",
+      "input": {
+        "kind": "logic",
+        "current": 90.0,
+        "target": 80.0,
+        "n": 3,
+        "created_day": "2028-02-28",
+        "today_day": "2028-03-02"
+      },
+      "expected": true
+    }
+  ]
+}

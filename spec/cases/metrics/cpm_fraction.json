@@ -1,0 +1,32 @@
+{
+  "name": "cpm_fraction",
+  "raw": "那个我们下午三点在三楼会议室开会，记得带上电脑。",
+  "polished": "我们下午三点在三楼会议室开会，记得带上电脑。",
+  "duration_s": 7.3,
+  "lexicon": null,
+  "expected": {
+    "chars": 22,
+    "fillers": {
+      "那个": 1
+    },
+    "filler_count": 1,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.048,
+    "cpm": 180.8,
+    "fluency": 66.4,
+    "concision": 100.0,
+    "scoreable": true,
+    "highlights": [
+      [
+        "那个",
+        "filler"
+      ],
+      [
+        "我们下午三点在三楼会议室开会，记得带上电脑。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

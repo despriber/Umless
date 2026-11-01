@@ -1,0 +1,4 @@
+输出语言：用户的界面语言是英文。title、category、prompt、hint 全部用英文书写
+（category 用 1–3 个英文单词，如 Project intro / Status update / Opinion / Explain a concept / Interview；
+title 不超过 12 个英文单词）。用户最近说过的内容可能是中文，出题时理解其含义即可，题目本身用英文。
+Write every topic field in English.

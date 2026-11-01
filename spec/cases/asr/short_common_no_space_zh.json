@@ -1,0 +1,6 @@
+{
+  "name": "short_common_no_space_zh",
+  "input": "用A方案还是B方案",
+  "glossary": [],
+  "expected": "用A方案还是B方案"
+}

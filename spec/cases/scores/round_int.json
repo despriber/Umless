@@ -1,0 +1,96 @@
+{
+  "kind": "round_int",
+  "cases": [
+    {
+      "name": "x0",
+      "input": {
+        "x": null
+      },
+      "expected": null
+    },
+    {
+      "name": "x1",
+      "input": {
+        "x": 0.5
+      },
+      "expected": 0
+    },
+    {
+      "name": "x2",
+      "input": {
+        "x": 1.5
+      },
+      "expected": 2
+    },
+    {
+      "name": "x3",
+      "input": {
+        "x": 2.5
+      },
+      "expected": 2
+    },
+    {
+      "name": "x4",
+      "input": {
+        "x": 76.5
+      },
+      "expected": 76
+    },
+    {
+      "name": "x5",
+      "input": {
+        "x": 77.5
+      },
+      "expected": 78
+    },
+    {
+      "name": "x6",
+      "input": {
+        "x": 76.49999999999999
+      },
+      "expected": 76
+    },
+    {
+      "name": "x7",
+      "input": {
+        "x": 64.0
+      },
+      "expected": 64
+    },
+    {
+      "name": "x8",
+      "input": {
+        "x": 99.5
+      },
+      "expected": 100
+    },
+    {
+      "name": "x9",
+      "input": {
+        "x": 100.0
+      },
+      "expected": 100
+    },
+    {
+      "name": "x10",
+      "input": {
+        "x": 0.0
+      },
+      "expected": 0
+    },
+    {
+      "name": "x11",
+      "input": {
+        "x": 74.0
+      },
+      "expected": 74
+    },
+    {
+      "name": "x12",
+      "input": {
+        "x": 65.45
+      },
+      "expected": 65
+    }
+  ]
+}

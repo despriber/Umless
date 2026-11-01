@@ -1,0 +1,45 @@
+{
+  "name": "emoji",
+  "raw": "好的👍嗯，收到🎉，然后我马上处理😀",
+  "polished": "好的👍收到🎉，我马上处理",
+  "duration_s": 2.0,
+  "lexicon": null,
+  "expected": {
+    "chars": 12,
+    "fillers": {
+      "然后": 1,
+      "嗯": 1
+    },
+    "filler_count": 2,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.143,
+    "cpm": 360.0,
+    "fluency": 22.3,
+    "concision": 100.0,
+    "scoreable": false,
+    "highlights": [
+      [
+        "好的👍",
+        "keep"
+      ],
+      [
+        "嗯",
+        "filler"
+      ],
+      [
+        "，收到🎉，",
+        "keep"
+      ],
+      [
+        "然后",
+        "filler"
+      ],
+      [
+        "我马上处理😀",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "glossary_ascii_case_only",
+  "input": "KOTLIN 和 KOTLIN",
+  "glossary": [
+    "Kotlin"
+  ],
+  "expected": "Kotlin 和 Kotlin"
+}

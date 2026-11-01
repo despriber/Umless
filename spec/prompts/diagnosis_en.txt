@@ -1,0 +1,5 @@
+输出语言（覆盖上面「所有文字使用简体中文」的要求）：用户的界面语言是英文。
+- 以下点评文字用英文书写：summary、strengths、issues 的 title 和 advice、examples 的 why、habits 的 title 和 advice。
+- 引用用户原话的字段保持用户说话时的语言，不要翻译：issues 和 habits 的 evidence、examples 的 original 和 better、personal_fillers、terms（habits 的 word 同理）。
+- 英文点评中提到中文口癖或原话时，直接保留中文原文，例如 Say "就是" less。
+Write all feedback in English; keep every quote of the user's speech in the language it was spoken.

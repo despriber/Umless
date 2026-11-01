@@ -1,0 +1,6 @@
+{
+  "name": "newline_not_sentence_end",
+  "input": "FIRST LINE\nSECOND LINE",
+  "glossary": [],
+  "expected": "First line\nsecond line"
+}

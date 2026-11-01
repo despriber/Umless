@@ -1,0 +1,6 @@
+{
+  "name": "proper_case_untouched",
+  "input": "Hello World, this is OpenAI.",
+  "glossary": [],
+  "expected": "Hello World, this is OpenAI."
+}

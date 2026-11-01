@@ -1,0 +1,8 @@
+{
+  "name": "glossary_acronym_lowercased_term",
+  "input": "我们用 GPU",
+  "glossary": [
+    "gpu"
+  ],
+  "expected": "我们用 gpu"
+}

@@ -1,0 +1,44 @@
+{
+  "name": "correction_budui",
+  "raw": "明天，哦不对，后天开会。",
+  "polished": "后天开会。",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 9,
+    "fillers": {
+      "哦": 1
+    },
+    "filler_count": 1,
+    "repeat_count": 0,
+    "correction_count": 1,
+    "rewrite_ratio": 0.385,
+    "cpm": null,
+    "fluency": 36.8,
+    "concision": 26.4,
+    "scoreable": false,
+    "highlights": [
+      [
+        "明天",
+        "cut"
+      ],
+      [
+        "，",
+        "keep"
+      ],
+      [
+        "哦",
+        "filler"
+      ],
+      [
+        "不对",
+        "correction"
+      ],
+      [
+        "，后天开会。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "correction_kept_in_polish",
+  "raw": "这个说法不对，应该是三点。",
+  "polished": "这个说法不对，应该是三点。",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 11,
+    "fillers": {},
+    "filler_count": 0,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.0,
+    "cpm": null,
+    "fluency": 100.0,
+    "concision": 100.0,
+    "scoreable": false,
+    "highlights": [
+      [
+        "这个说法不对，应该是三点。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

@@ -1,0 +1,755 @@
+{
+  "kind": "aggregate",
+  "cases": [
+    {
+      "name": "empty",
+      "input": {
+        "rows": []
+      },
+      "expected": {
+        "n": 0,
+        "chars": 0,
+        "fillers": {},
+        "filler_count": 0,
+        "fluency": null,
+        "concision": null,
+        "rewrite_ratio": null,
+        "filler_stats": []
+      }
+    },
+    {
+      "name": "all_unscoreable",
+      "input": {
+        "rows": [
+          {
+            "chars": 8,
+            "fillers": {
+              "嗯": 1
+            },
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": null,
+            "scoreable": false
+          },
+          {
+            "chars": 10,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": null,
+            "scoreable": false
+          }
+        ]
+      },
+      "expected": {
+        "n": 0,
+        "chars": 0,
+        "fillers": {},
+        "filler_count": 0,
+        "fluency": null,
+        "concision": null,
+        "rewrite_ratio": null,
+        "filler_stats": []
+      }
+    },
+    {
+      "name": "single",
+      "input": {
+        "rows": [
+          {
+            "chars": 40,
+            "fillers": {
+              "然后": 2,
+              "嗯": 1
+            },
+            "repeat_count": 1,
+            "correction_count": 0,
+            "rewrite_ratio": 0.215,
+            "scoreable": true
+          }
+        ]
+      },
+      "expected": {
+        "n": 1,
+        "chars": 40,
+        "fillers": {
+          "然后": 2,
+          "嗯": 1
+        },
+        "filler_count": 3,
+        "fluency": 50.9,
+        "concision": 74.1,
+        "rewrite_ratio": 0.215,
+        "filler_stats": [
+          {
+            "word": "然后",
+            "count": 2,
+            "per100": 5.0
+          },
+          {
+            "word": "嗯",
+            "count": 1,
+            "per100": 2.5
+          }
+        ]
+      }
+    },
+    {
+      "name": "weighted_by_chars",
+      "input": {
+        "rows": [
+          {
+            "chars": 20,
+            "fillers": {
+              "嗯": 2
+            },
+            "repeat_count": 0,
+            "correction_count": 1,
+            "rewrite_ratio": 0.1,
+            "scoreable": true
+          },
+          {
+            "chars": 180,
+            "fillers": {
+              "就是": 3
+            },
+            "repeat_count": 2,
+            "correction_count": 0,
+            "rewrite_ratio": 0.3,
+            "scoreable": true
+          },
+          {
+            "chars": 9,
+            "fillers": {
+              "嗯": 5
+            },
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": null,
+            "scoreable": false
+          }
+        ]
+      },
+      "expected": {
+        "n": 2,
+        "chars": 200,
+        "fillers": {
+          "嗯": 2,
+          "就是": 3
+        },
+        "filler_count": 5,
+        "fluency": 79.9,
+        "concision": 83.5,
+        "rewrite_ratio": 0.2,
+        "filler_stats": [
+          {
+            "word": "就是",
+            "count": 3,
+            "per100": 1.5
+          },
+          {
+            "word": "嗯",
+            "count": 2,
+            "per100": 1.0
+          }
+        ]
+      }
+    },
+    {
+      "name": "filler_stats_tie_order",
+      "input": {
+        "rows": [
+          {
+            "chars": 50,
+            "fillers": {
+              "然后": 2,
+              "就是": 3
+            },
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": null,
+            "scoreable": true
+          },
+          {
+            "chars": 60,
+            "fillers": {
+              "嗯": 3,
+              "然后": 1
+            },
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": null,
+            "scoreable": true
+          }
+        ]
+      },
+      "expected": {
+        "n": 2,
+        "chars": 110,
+        "fillers": {
+          "然后": 3,
+          "就是": 3,
+          "嗯": 3
+        },
+        "filler_count": 9,
+        "fluency": 47.9,
+        "concision": 100.0,
+        "rewrite_ratio": null,
+        "filler_stats": [
+          {
+            "word": "然后",
+            "count": 3,
+            "per100": 2.73
+          },
+          {
+            "word": "就是",
+            "count": 3,
+            "per100": 2.73
+          },
+          {
+            "word": "嗯",
+            "count": 3,
+            "per100": 2.73
+          }
+        ]
+      }
+    },
+    {
+      "name": "ratio_none_mixed",
+      "input": {
+        "rows": [
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": null,
+            "scoreable": true
+          },
+          {
+            "chars": 30,
+            "fillers": {
+              "那个": 1
+            },
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.42,
+            "scoreable": true
+          },
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 1,
+            "correction_count": 1,
+            "rewrite_ratio": 0.0,
+            "scoreable": true
+          }
+        ]
+      },
+      "expected": {
+        "n": 3,
+        "chars": 90,
+        "fillers": {
+          "那个": 1
+        },
+        "filler_count": 1,
+        "fluency": 90.5,
+        "concision": 76.6,
+        "rewrite_ratio": 0.21,
+        "filler_stats": [
+          {
+            "word": "那个",
+            "count": 1,
+            "per100": 1.11
+          }
+        ]
+      }
+    },
+    {
+      "name": "ratio_neumaier_sum",
+      "input": {
+        "rows": [
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.1,
+            "scoreable": true
+          },
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.1,
+            "scoreable": true
+          },
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.1,
+            "scoreable": true
+          },
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.1,
+            "scoreable": true
+          },
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.1,
+            "scoreable": true
+          },
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.1,
+            "scoreable": true
+          },
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.1,
+            "scoreable": true
+          },
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.1,
+            "scoreable": true
+          },
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.1,
+            "scoreable": true
+          },
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.1,
+            "scoreable": true
+          }
+        ]
+      },
+      "expected": {
+        "n": 10,
+        "chars": 300,
+        "fillers": {},
+        "filler_count": 0,
+        "fluency": 100.0,
+        "concision": 100.0,
+        "rewrite_ratio": 0.1,
+        "filler_stats": []
+      }
+    },
+    {
+      "name": "per100_rounding",
+      "input": {
+        "rows": [
+          {
+            "chars": 7,
+            "fillers": {
+              "嗯": 1
+            },
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": null,
+            "scoreable": true
+          },
+          {
+            "chars": 14,
+            "fillers": {
+              "嗯": 1,
+              "呃": 2
+            },
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": null,
+            "scoreable": true
+          }
+        ]
+      },
+      "expected": {
+        "n": 2,
+        "chars": 21,
+        "fillers": {
+          "嗯": 2,
+          "呃": 2
+        },
+        "filler_count": 4,
+        "fluency": 18.0,
+        "concision": 100.0,
+        "rewrite_ratio": null,
+        "filler_stats": [
+          {
+            "word": "嗯",
+            "count": 2,
+            "per100": 9.52
+          },
+          {
+            "word": "呃",
+            "count": 2,
+            "per100": 9.52
+          }
+        ]
+      }
+    },
+    {
+      "name": "zero_chars_scoreable",
+      "input": {
+        "rows": [
+          {
+            "chars": 0,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": null,
+            "scoreable": true
+          }
+        ]
+      },
+      "expected": {
+        "n": 1,
+        "chars": 0,
+        "fillers": {},
+        "filler_count": 0,
+        "fluency": null,
+        "concision": null,
+        "rewrite_ratio": null,
+        "filler_stats": []
+      }
+    },
+    {
+      "name": "ratio_half_0",
+      "input": {
+        "rows": [
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.001,
+            "scoreable": true
+          },
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.01,
+            "scoreable": true
+          }
+        ]
+      },
+      "expected": {
+        "n": 2,
+        "chars": 60,
+        "fillers": {},
+        "filler_count": 0,
+        "fluency": 100.0,
+        "concision": 100.0,
+        "rewrite_ratio": 0.005,
+        "filler_stats": []
+      }
+    },
+    {
+      "name": "ratio_half_1",
+      "input": {
+        "rows": [
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.001,
+            "scoreable": true
+          },
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.014,
+            "scoreable": true
+          }
+        ]
+      },
+      "expected": {
+        "n": 2,
+        "chars": 60,
+        "fillers": {},
+        "filler_count": 0,
+        "fluency": 100.0,
+        "concision": 100.0,
+        "rewrite_ratio": 0.007,
+        "filler_stats": []
+      }
+    },
+    {
+      "name": "ratio_half_2",
+      "input": {
+        "rows": [
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.001,
+            "scoreable": true
+          },
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.018,
+            "scoreable": true
+          }
+        ]
+      },
+      "expected": {
+        "n": 2,
+        "chars": 60,
+        "fillers": {},
+        "filler_count": 0,
+        "fluency": 100.0,
+        "concision": 100.0,
+        "rewrite_ratio": 0.009,
+        "filler_stats": []
+      }
+    },
+    {
+      "name": "ratio_half_3",
+      "input": {
+        "rows": [
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.001,
+            "scoreable": true
+          },
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.002,
+            "scoreable": true
+          }
+        ]
+      },
+      "expected": {
+        "n": 2,
+        "chars": 60,
+        "fillers": {},
+        "filler_count": 0,
+        "fluency": 100.0,
+        "concision": 100.0,
+        "rewrite_ratio": 0.002,
+        "filler_stats": []
+      }
+    },
+    {
+      "name": "ratio_half_4",
+      "input": {
+        "rows": [
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.001,
+            "scoreable": true
+          },
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.004,
+            "scoreable": true
+          }
+        ]
+      },
+      "expected": {
+        "n": 2,
+        "chars": 60,
+        "fillers": {},
+        "filler_count": 0,
+        "fluency": 100.0,
+        "concision": 100.0,
+        "rewrite_ratio": 0.003,
+        "filler_stats": []
+      }
+    },
+    {
+      "name": "ratio_half_5",
+      "input": {
+        "rows": [
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.001,
+            "scoreable": true
+          },
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.006,
+            "scoreable": true
+          }
+        ]
+      },
+      "expected": {
+        "n": 2,
+        "chars": 60,
+        "fillers": {},
+        "filler_count": 0,
+        "fluency": 100.0,
+        "concision": 100.0,
+        "rewrite_ratio": 0.004,
+        "filler_stats": []
+      }
+    },
+    {
+      "name": "ratio_neumaier_0",
+      "input": {
+        "rows": [
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.813,
+            "scoreable": true
+          },
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.072,
+            "scoreable": true
+          },
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.331,
+            "scoreable": true
+          },
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.59,
+            "scoreable": true
+          }
+        ]
+      },
+      "expected": {
+        "n": 4,
+        "chars": 120,
+        "fillers": {},
+        "filler_count": 0,
+        "fluency": 100.0,
+        "concision": 100.0,
+        "rewrite_ratio": 0.451,
+        "filler_stats": []
+      }
+    },
+    {
+      "name": "ratio_neumaier_1",
+      "input": {
+        "rows": [
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.813,
+            "scoreable": true
+          },
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.072,
+            "scoreable": true
+          },
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.331,
+            "scoreable": true
+          },
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.59,
+            "scoreable": true
+          },
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.849,
+            "scoreable": true
+          },
+          {
+            "chars": 30,
+            "fillers": {},
+            "repeat_count": 0,
+            "correction_count": 0,
+            "rewrite_ratio": 0.108,
+            "scoreable": true
+          }
+        ]
+      },
+      "expected": {
+        "n": 6,
+        "chars": 180,
+        "fillers": {},
+        "filler_count": 0,
+        "fluency": 100.0,
+        "concision": 100.0,
+        "rewrite_ratio": 0.46,
+        "filler_stats": []
+      }
+    }
+  ]
+}

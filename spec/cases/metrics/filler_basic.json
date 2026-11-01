@@ -1,0 +1,41 @@
+{
+  "name": "filler_basic",
+  "raw": "嗯，我觉得这个方案还可以，然后我们明天再讨论一下。",
+  "polished": "我觉得这个方案还可以，我们明天再讨论一下。",
+  "duration_s": 6.2,
+  "lexicon": null,
+  "expected": {
+    "chars": 22,
+    "fillers": {
+      "然后": 1,
+      "嗯": 1
+    },
+    "filler_count": 2,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.073,
+    "cpm": 212.9,
+    "fluency": 44.1,
+    "concision": 100.0,
+    "scoreable": true,
+    "highlights": [
+      [
+        "嗯",
+        "filler"
+      ],
+      [
+        "，我觉得这个方案还可以，",
+        "keep"
+      ],
+      [
+        "然后",
+        "filler"
+      ],
+      [
+        "我们明天再讨论一下。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

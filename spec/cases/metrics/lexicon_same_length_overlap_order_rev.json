@@ -1,0 +1,51 @@
+{
+  "name": "lexicon_same_length_overlap_order_rev",
+  "raw": "就是说好了，就是说定了。",
+  "polished": "好了，定了。",
+  "duration_s": null,
+  "lexicon": [
+    "是说",
+    "就是"
+  ],
+  "expected": {
+    "chars": 10,
+    "fillers": {
+      "是说": 2
+    },
+    "filler_count": 2,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.429,
+    "cpm": null,
+    "fluency": 16.5,
+    "concision": 100.0,
+    "scoreable": false,
+    "highlights": [
+      [
+        "就",
+        "cut"
+      ],
+      [
+        "是说",
+        "filler"
+      ],
+      [
+        "好了，",
+        "keep"
+      ],
+      [
+        "就",
+        "cut"
+      ],
+      [
+        "是说",
+        "filler"
+      ],
+      [
+        "定了。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

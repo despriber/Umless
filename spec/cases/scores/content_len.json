@@ -1,0 +1,61 @@
+{
+  "kind": "content_len",
+  "cases": [
+    {
+      "name": "t0",
+      "input": {
+        "text": ""
+      },
+      "expected": 0
+    },
+    {
+      "name": "t1",
+      "input": {
+        "text": "嗯，好的。"
+      },
+      "expected": 3
+    },
+    {
+      "name": "t2",
+      "input": {
+        "text": "Hello_world 123"
+      },
+      "expected": 13
+    },
+    {
+      "name": "t3",
+      "input": {
+        "text": "  \n\t"
+      },
+      "expected": 0
+    },
+    {
+      "name": "t4",
+      "input": {
+        "text": "𠮷野家👍"
+      },
+      "expected": 3
+    },
+    {
+      "name": "t5",
+      "input": {
+        "text": "café"
+      },
+      "expected": 4
+    },
+    {
+      "name": "t6",
+      "input": {
+        "text": "²Ⅻ½①"
+      },
+      "expected": 4
+    },
+    {
+      "name": "t7",
+      "input": {
+        "text": "ＡＩ，１２。"
+      },
+      "expected": 4
+    }
+  ]
+}

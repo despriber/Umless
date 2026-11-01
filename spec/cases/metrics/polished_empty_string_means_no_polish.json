@@ -1,0 +1,32 @@
+{
+  "name": "polished_empty_string_means_no_polish",
+  "raw": "嗯，那个我们先这样吧，然后再说。",
+  "polished": "",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 13,
+    "fillers": {
+      "嗯": 1
+    },
+    "filler_count": 1,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": null,
+    "cpm": null,
+    "fluency": 50.0,
+    "concision": 100.0,
+    "scoreable": false,
+    "highlights": [
+      [
+        "嗯",
+        "filler"
+      ],
+      [
+        "，那个我们先这样吧，然后再说。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

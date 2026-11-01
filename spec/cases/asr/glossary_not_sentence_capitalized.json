@@ -1,0 +1,9 @@
+{
+  "name": "glossary_not_sentence_capitalized",
+  "input": "PYTHON IS GOOD. GITHUB TOO",
+  "glossary": [
+    "python",
+    "github"
+  ],
+  "expected": "python is good. github too"
+}

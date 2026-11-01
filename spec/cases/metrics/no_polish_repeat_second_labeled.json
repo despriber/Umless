@@ -1,0 +1,34 @@
+{
+  "name": "no_polish_repeat_second_labeled",
+  "raw": "我们我们先吃饭，然后再开会讨论这个问题。",
+  "polished": null,
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 18,
+    "fillers": {},
+    "filler_count": 0,
+    "repeat_count": 1,
+    "correction_count": 0,
+    "rewrite_ratio": null,
+    "cpm": null,
+    "fluency": 100.0,
+    "concision": 51.3,
+    "scoreable": true,
+    "highlights": [
+      [
+        "我们",
+        "keep"
+      ],
+      [
+        "我们",
+        "repeat"
+      ],
+      [
+        "先吃饭，然后再开会讨论这个问题。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

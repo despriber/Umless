@@ -1,0 +1,9 @@
+{
+  "name": "glossary_longer_first",
+  "input": "CLAUDE CODE 写的 CODE",
+  "glossary": [
+    "code",
+    "Claude Code"
+  ],
+  "expected": "Claude Code 写的 code"
+}

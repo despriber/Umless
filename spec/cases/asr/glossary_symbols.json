@@ -1,0 +1,10 @@
+{
+  "name": "glossary_symbols",
+  "input": "我会 C++ 和 NODE.JS，还有 .NET",
+  "glossary": [
+    "C++",
+    "Node.js",
+    ".NET"
+  ],
+  "expected": "我会 C++ 和 Node.js，还有 .NET"
+}

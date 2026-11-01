@@ -1,0 +1,26 @@
+{
+  "name": "filler_kept_in_polish",
+  "raw": "那个文件我已经发给你了，你看一下这个表格。",
+  "polished": "那个文件我已经发给你了，你看一下这个表格。",
+  "duration_s": 4.0,
+  "lexicon": null,
+  "expected": {
+    "chars": 19,
+    "fillers": {},
+    "filler_count": 0,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.0,
+    "cpm": 285.0,
+    "fluency": 100.0,
+    "concision": 100.0,
+    "scoreable": true,
+    "highlights": [
+      [
+        "那个文件我已经发给你了，你看一下这个表格。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "glossary_restore",
+  "input": "PYTHON 很好用，我在 GITHUB 上看到 CLAUDE CODE",
+  "glossary": [
+    "Python",
+    "GitHub",
+    "Claude Code"
+  ],
+  "expected": "Python 很好用，我在 GitHub 上看到 Claude Code"
+}

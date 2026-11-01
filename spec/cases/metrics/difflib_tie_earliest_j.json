@@ -1,0 +1,26 @@
+{
+  "name": "difflib_tie_earliest_j",
+  "raw": "开会",
+  "polished": "开会，开会吧",
+  "duration_s": null,
+  "lexicon": null,
+  "expected": {
+    "chars": 2,
+    "fillers": {},
+    "filler_count": 0,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.429,
+    "cpm": null,
+    "fluency": 100.0,
+    "concision": 100.0,
+    "scoreable": false,
+    "highlights": [
+      [
+        "开会",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

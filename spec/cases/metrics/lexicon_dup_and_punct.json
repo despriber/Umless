@@ -1,0 +1,55 @@
+{
+  "name": "lexicon_dup_and_punct",
+  "raw": "嗯，我觉得吧，嗯。这样可以。",
+  "polished": "这样可以。",
+  "duration_s": null,
+  "lexicon": [
+    "嗯",
+    "嗯",
+    "，",
+    "嗯。",
+    "我觉得吧"
+  ],
+  "expected": {
+    "chars": 10,
+    "fillers": {
+      "我觉得吧": 1,
+      "嗯。": 2
+    },
+    "filler_count": 3,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.429,
+    "cpm": null,
+    "fluency": 6.7,
+    "concision": 100.0,
+    "scoreable": false,
+    "highlights": [
+      [
+        "嗯",
+        "filler"
+      ],
+      [
+        "，",
+        "keep"
+      ],
+      [
+        "我觉得吧",
+        "filler"
+      ],
+      [
+        "，",
+        "keep"
+      ],
+      [
+        "嗯",
+        "filler"
+      ],
+      [
+        "。这样可以。",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}

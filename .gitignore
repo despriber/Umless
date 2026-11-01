@@ -1,0 +1,73 @@
+# 个人录音与转换产物（隐私数据，不入库）
+recordings/
+bench/data/
+
+# 模型文件（体积大，用 bench/download_models.sh 下载）
+bench/models/
+
+# 测试结果中含个人语音转写内容
+bench/results/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# 其他
+.cache/
+
+# 本地测试数据目录（配置里含 API Key）
+desktop/.testhome/
+
+# 宣传动画（本地素材与导出产物，不入库）
+promo/
+
+# 运行时产生的个人数据：日志里可能有识别内容，数据库含逐字稿，配置可能含 API Key
+*.log
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+config.toml
+umless-export-*.json
+.env
+.env.*
+
+# 录音与音频（个人隐私，不入库）
+*.wav
+*.mp3
+*.m4a
+*.flac
+*.ogg
+
+# 模型文件与压缩包
+*.onnx
+*.tar.bz2
+
+# Python 工具缓存与构建产物
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+.uv-cache/
+
+# Node（promo 等本地工具）
+node_modules/
+
+# IDE / 系统 / 本地 AI 助手配置
+.idea/
+.vscode/
+.claude/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 签名密钥（只放在仓库之外，任何情况下都不要提交）
+*.jks
+*.keystore
+signing.env

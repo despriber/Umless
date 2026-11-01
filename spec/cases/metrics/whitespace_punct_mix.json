@@ -1,0 +1,36 @@
+{
+  "name": "whitespace_punct_mix",
+  "raw": "  嗯……  好 ， 我 知道 了 \n\t 明天 见 ！ ",
+  "polished": "好，我知道了，明天见！",
+  "duration_s": 2.5,
+  "lexicon": null,
+  "expected": {
+    "chars": 9,
+    "fillers": {
+      "嗯": 1
+    },
+    "filler_count": 1,
+    "repeat_count": 0,
+    "correction_count": 0,
+    "rewrite_ratio": 0.059,
+    "cpm": 216.0,
+    "fluency": 36.8,
+    "concision": 100.0,
+    "scoreable": false,
+    "highlights": [
+      [
+        "  ",
+        "keep"
+      ],
+      [
+        "嗯",
+        "filler"
+      ],
+      [
+        "……  好 ， 我 知道 了 \n\t 明天 见 ！ ",
+        "keep"
+      ]
+    ],
+    "version": 1
+  }
+}
