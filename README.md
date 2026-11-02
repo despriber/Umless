@@ -13,6 +13,7 @@
   <a href="https://github.com/despriber/Umless/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/despriber/Umless?label=%E6%A1%8C%E9%9D%A2%E7%AB%AF&color=0f766e"></a>
   <a href="https://github.com/despriber/Umless-Android"><img alt="Android" src="https://img.shields.io/badge/Android-Umless%20%E8%BE%93%E5%85%A5%E6%B3%95-0d9488?logo=android&logoColor=white"></a>
   <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%20%7C%20Android-4b5550">
+  <a href="https://linux.do/"><img alt="LINUX DO" src="https://img.shields.io/badge/%E7%A4%BE%E5%8C%BA-LINUX%20DO-2b2b2b"></a>
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-4b5550"></a>
   <img alt="Local first" src="https://img.shields.io/badge/%E6%95%B0%E6%8D%AE-%E5%8F%AA%E5%9C%A8%E6%9C%AC%E6%9C%BA-0d9488">
 </p>
@@ -274,3 +275,7 @@ README 里的截图同样来自模拟后端（固定种子的示例数据），�
 - `bench/` 中用于对比的 Paraformer、Fun-ASR-Nano：以各自模型卡的许可为准
 
 感谢 [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx)、[FunAudioLLM / SenseVoice](https://github.com/FunAudioLLM/SenseVoice)、[Qwen3-ASR](https://huggingface.co/Qwen/Qwen3-ASR-0.6B)、[fcitx5-android](https://github.com/fcitx5-android/fcitx5-android) 与 [Fcitx](https://github.com/fcitx/fcitx5) 社区、[pywebview](https://github.com/r0x0r/pywebview) 等开源项目。
+
+本项目认可并积极参与 [LINUX DO](https://linux.do/) 社区，欢迎在那里交流使用体验和建议。
+
+<p align="center">交流社区：<a href="https://linux.do/">LINUX DO</a></p>

@@ -13,6 +13,7 @@
   <a href="https://github.com/despriber/Umless/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/despriber/Umless?label=desktop&color=0f766e"></a>
   <a href="https://github.com/despriber/Umless-Android"><img alt="Android" src="https://img.shields.io/badge/Android-Umless%20IME-0d9488?logo=android&logoColor=white"></a>
   <img alt="Platform" src="https://img.shields.io/badge/platform-Windows%20%7C%20Android-4b5550">
+  <a href="https://linux.do/"><img alt="LINUX DO" src="https://img.shields.io/badge/community-LINUX%20DO-2b2b2b"></a>
   <a href="LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-4b5550"></a>
   <img alt="Local first" src="https://img.shields.io/badge/data-stays%20on%20your%20device-0d9488">
 </p>
@@ -260,3 +261,7 @@ Models are not distributed with the code; `umless download` fetches them from th
 - Paraformer and Fun-ASR-Nano (only used in `bench/`): see their model cards
 
 Thanks to [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx), [FunAudioLLM / SenseVoice](https://github.com/FunAudioLLM/SenseVoice), [Qwen3-ASR](https://huggingface.co/Qwen/Qwen3-ASR-0.6B), [fcitx5-android](https://github.com/fcitx5-android/fcitx5-android) and the [Fcitx](https://github.com/fcitx/fcitx5) community, [pywebview](https://github.com/r0x0r/pywebview) and the other open-source projects Umless builds on.
+
+Umless acknowledges and takes part in the [LINUX DO](https://linux.do/) community — you're welcome to share feedback there.
+
+<p align="center">Community: <a href="https://linux.do/">LINUX DO</a></p>
